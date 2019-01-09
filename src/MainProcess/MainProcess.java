@@ -109,8 +109,9 @@ public class MainProcess {
 
     }
 
-    private static char checkRule(Rule rule) {
-        String relativeResults = rule.getRelativeResults();
+    private static char checkRule(Rule rule) throws Exception {
+        Rule realRule = dbHandler.getRule(rule.getId());
+        String relativeResults = realRule.getRelativeResults();
         if (relativeResults.equals("X"))
             return 'X';
         if (relativeResults.equals("F"))
@@ -206,9 +207,11 @@ public class MainProcess {
                     StopWatch sw = StopWatch.createStarted();
                     char response;
                     while ((response = checkRule(rule)) == 'X' && sw.getTime(TimeUnit.SECONDS) < WAIT_TIME_SECONDS){
+                        System.out.println("geldi" + response);
                         Thread.sleep(100);
                     }
                     canWork = response == 'T';
+
                 }
 
                 if (canWork){

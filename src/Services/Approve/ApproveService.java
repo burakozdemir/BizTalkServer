@@ -24,6 +24,7 @@ public class ApproveService {
     userApp = ra.getUserApprove();
     jobId = ra.getJobId();
     relativeId = ra.getRelativeId();
+    System.out.println("RelId:"  + relativeId);
     DBHandler db = new DBHandler();
     //guiden gelen jobid ile db deki job bilgilerine ulasiyoruz.
     Job job = null;

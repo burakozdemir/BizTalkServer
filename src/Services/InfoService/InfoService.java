@@ -41,6 +41,7 @@ public class InfoService {
     @XmlElement(name = "getJobFromOwner")
     public ArrayList<JobResponse> getJobsFromOwner(@WebParam(name = "ownerID") @XmlElement(required = true)
                                                                Integer ownerId) throws Exception {
+        System.out.println(ownerId);
         Set<Job> jobSet = handler.getJobSet(ownerId);
         ArrayList<JobResponse> jobList = new ArrayList<>();
 

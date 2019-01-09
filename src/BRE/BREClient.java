@@ -11,10 +11,10 @@ import java.io.InputStreamReader;
 
 public class BREClient {
     private static final String ruleUrl
-            = "http://10.1.40.1:8080/rule";
+            = "http://10.1.46.182:8080/rule";
     private static String ruleParameters = "<rule id='%d'>" + "<clause>%s</clause>" + "<relatives>%s</relatives>" + "</rule>";
     private static final String answerUrl
-            = "http://10.1.40.1:8080/rule/answer";
+            = "http://10.1.46.182:8080/rule/answer";
     private static String answerParameters = "<response>\n" +
             "    <user_id>%d</user_id>\n" +
             "    <rule_id>%d</rule_id>\n" +
