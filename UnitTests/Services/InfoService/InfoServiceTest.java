@@ -112,7 +112,6 @@ public class InfoServiceTest {
     public void getJobsFromRelative() throws Exception {
         InfoService inf_ser = new InfoService();
         DBHandler db = new DBHandler();
-        ArrayList<String> sameOwnerJobs = new ArrayList<>();
         ArrayList<JobResponse> retVal;
         ArrayList<JobResponse> checkList = new ArrayList<>();
 
