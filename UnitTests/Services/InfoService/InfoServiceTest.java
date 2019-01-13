@@ -109,6 +109,35 @@ public class InfoServiceTest {
 
 
     @Test
-    public void getJobsFromRelative() {
+    public void getJobsFromRelative() throws Exception {
+        InfoService inf_ser = new InfoService();
+        DBHandler db = new DBHandler();
+        ArrayList<JobResponse> retVal;
+        ArrayList<JobResponse> checkList = new ArrayList<>();
+
+        Job sample = new Job(1, "job1", "destination", "file url", "111, 222, 333", 1, 1);
+        Job sample2 = new Job(2, "job2", "destination", "file url", "444, 555, 666", 1, 2);
+        Job sample3 = new Job(1, "job3", "destination", "file url", "777, 888, 999", 1, 3);
+        Job sample4 = new Job(1, "job4", "destination", "file url", "111, 2222, 3333", 1, 4);
+
+        int id1 = db.insertJob(sample);
+        int id2 = db.insertJob(sample2);
+        int id3 = db.insertJob(sample3);
+        int id4 = db.insertJob(sample4);
+
+        sample.setId(id1);
+        sample2.setId(id2);
+        sample3.setId(id3);
+        sample4.setId(id4);
+
+        checkList.add(new JobResponse(id1, 1, "job1", "destination", "file url", "111, 222, 333", 1, 1,sample.getInsertDateTime_Date(), sample.getUpdateDateTime_Date()));
+        checkList.add(new JobResponse(id4, 1, "job4", "destination", "file url", "111, 2222, 3333", 1, 4,sample.getInsertDateTime_Date(), sample.getUpdateDateTime_Date()));
+
+        retVal = inf_ser.getJobsFromRelative(111);
+
+        for (int i = 0; i < checkList.size(); ++i) {
+            assertEquals(checkList.get(i).toString(), retVal.get(i).toString());
+        }
+
     }
 }

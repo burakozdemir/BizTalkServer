@@ -157,7 +157,7 @@ public class DBHandler {
     public ArrayList<Job> getJobs() throws Exception {
 
         Connection conn = getConnection();
-        ArrayList<Job> jobs = new ArrayList<Job>();
+        ArrayList<Job> jobs = new ArrayList<>();
 
         PreparedStatement preparedStmt = conn.prepareStatement("SELECT * FROM jobs WHERE Status = -1 ORDER BY InsertDateTime");
 
@@ -581,6 +581,65 @@ public class DBHandler {
 
         return rulesAndJobsArrayList;
 
+    }
+
+    public ArrayList<Job> getRulesAndJobs() throws Exception {
+        Connection conn = getConnection();
+        PreparedStatement preparedStmt = conn.prepareStatement("SELECT * FROM orchestrations");
+
+        ResultSet rs = preparedStmt.executeQuery();
+        RulesAndJobs rulesAndJobs = new RulesAndJobs();
+        while (rs.next()) {
+
+            PreparedStatement preparedStmt2 = conn.prepareStatement("SELECT * FROM jobs WHERE JobId = ?");
+            preparedStmt2.setInt(1, rs.getInt("StartingJobId"));
+            ResultSet rs2 = preparedStmt2.executeQuery();
+
+
+            while (rs2.next()) {
+
+                Job job = new Job();
+                job.setId(rs2.getInt("JobId"));
+                job.setOwner(rs2.getInt("JobOwner"));
+                job.setDescription(rs2.getString("Description"));
+                job.setDestination(rs2.getString("Destination"));
+                job.setFileUrl(rs2.getString("FileUrl"));
+                job.setRelatives(rs2.getString("Relatives"));
+                job.setStatus(rs2.getInt("Status"));
+                job.setRuleId(rs2.getInt("RuleId"));
+                job.setInsertDateTime(rs2.getString("InsertDateTime"));
+                job.setUpdateDateTime(rs2.getString("UpdateDateTime"));
+                rulesAndJobs.addJob(job);
+
+                PreparedStatement preparedStmt3 = conn.prepareStatement("SELECT * FROM rules WHERE RuleId = ?");
+                preparedStmt3.setInt(1, rs2.getInt("RuleId"));
+                ResultSet rs3 = preparedStmt3.executeQuery();
+
+                if (rs3.next()) {
+
+                    Rule rule = new Rule();
+                    rule.setId(rs3.getInt("RuleId"));
+                    rule.setOwnerID(rs3.getInt("RuleOwner"));
+                    rule.setQuery(rs3.getString("RuleQuery"));
+                    rule.setYesEdge(rs3.getInt("YesEdge"));
+                    rule.setNoEdge(rs3.getInt("NoEdge"));
+                    rule.setRelativeResults(rs3.getString("RelativeResult"));
+                    rulesAndJobs.addRule(rule);
+
+                    PreparedStatement preparedStmt4 = conn.prepareStatement("SELECT * FROM jobs WHERE JobId = ?");
+                    preparedStmt4.setInt(1, rs3.getInt("YesEdge"));
+                    rs2 = preparedStmt4.executeQuery();
+
+                }
+
+            }
+        }
+
+        closePreparedStatement(preparedStmt);
+        closeResultSet(rs);
+        closeConnection(conn);
+
+        return rulesAndJobs.getJobs();
     }
 
 }
