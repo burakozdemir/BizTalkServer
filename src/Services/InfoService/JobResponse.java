@@ -20,6 +20,23 @@ public class JobResponse {
     private Date insertDateTime;
     private Date updateDateTime;
 
+    public JobResponse(int id, int owner, String description, String destination, String fileUrl, String relatives, int status, int ruleId, Date insertDateTime, Date updateDateTime) {
+        this.id = id;
+        this.owner = owner;
+        this.description = description;
+        this.destination = destination;
+        this.fileUrl = fileUrl;
+        this.relatives = relatives;
+        this.status = status;
+        this.ruleId = ruleId;
+        this.insertDateTime = insertDateTime;
+        this.updateDateTime = updateDateTime;
+    }
+
+    public JobResponse() {
+
+    }
+
     public int getId() {
         return id;
     }
