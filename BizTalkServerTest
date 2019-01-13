@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:orc="http://orchestration.server.com">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <orc:addOrchestration>
+         <orchestration>
+            <id>1</id>
+            <ownerID>2</ownerID>
+            <startJobID>1</startJobID>
+         </orchestration>
+         <!--1 or more repetitions:-->
+         <jobList>
+            <id>1</id>
+            <owner>2</owner>
+            <!--Optional:-->
+            <description>precondition: CSE 101</description>
+            <!--Optional:-->
+            <destination>10.1.90.54</destination>
+            <!--Optional:-->
+            <fileUrl>https://dosya.wmaraci.com/nedir/c-dili.png</fileUrl>
+            <!--Optional:-->
+            <relatives>18,22</relatives>
+            <ruleId>1</ruleId>
+         </jobList>
+		
+		<jobList>
+            <id>2</id>
+            <owner>2</owner>
+            <!--Optional:-->
+            <description>precondition: CSE102 </description>
+            <!--Optional:-->
+            <destination>10.1.90.54</destination>
+            <!--Optional:-->
+            <fileUrl>https://cdn.webtekno.com/media/cache/content_detail_v2/article/44132/evde-kendi-kendine-c-programlama-dilini-ogrenmek-isteyenlere-altin-degerinde-tavsiyeler-1523614183.png</fileUrl>
+            <!--Optional:-->
+            <relatives>32,33,44</relatives>
+            <ruleId>2</ruleId>
+         </jobList>
+
+		<jobList>
+            <id>3</id>
+            <owner>2</owner>
+            <!--Optional:-->
+            <description>precondition: CSE 241 </description>
+            <!--Optional:-->
+            <destination>10.1.90.54</destination>
+            <!--Optional:-->
+            <fileUrl>https://upload.wikimedia.org/wikipedia/tr/thumb/2/2e/Java_Logo.svg/1200px-Java_Logo.svg.png</fileUrl>
+            <!--Optional:-->
+            <relatives>55</relatives>
+            <ruleId>3</ruleId>
+         </jobList>
+
+		<jobList>
+            <id>4</id>
+            <owner>2</owner>
+            <!--Optional:-->
+            <description>precondition: CSE 222 </description>
+            <!--Optional:-->
+            <destination>10.1.90.54</destination>
+            <!--Optional:-->
+            <fileUrl>https://images-na.ssl-images-amazon.com/images/I/31INtMDDnUL._SX258_BO1,204,203,200_.jpg</fileUrl>
+            <!--Optional:-->
+             <relatives>33,44</relatives>
+            <ruleId>4</ruleId>
+         </jobList>
+         
+         <!--1 or more repetitions:-->
+         <ruleList>
+            <id>1</id>
+            <ownerID>2</ownerID>
+            <!--Optional:-->
+            <query>(18,22)</query>
+            <yesEdge>2</yesEdge>
+            <noEdge>0</noEdge>
+            <!--Optional:-->
+            <relativeResults>?</relativeResults>
+         </ruleList>
+		
+		<ruleList>
+            <id>2</id>
+            <ownerID>2</ownerID>
+            <!--Optional:-->
+            <query>(32).(33,44)</query>
+            <yesEdge>3</yesEdge>
+            <noEdge>0</noEdge>
+            <!--Optional:-->
+            <relativeResults>?</relativeResults>
+         </ruleList>
+
+		<ruleList>
+            <id>3</id>
+            <ownerID>2</ownerID>
+            <!--Optional:-->
+            <query>55</query>
+            <yesEdge>4</yesEdge>
+            <noEdge>0</noEdge>
+            <!--Optional:-->
+            <relativeResults>?</relativeResults>
+         </ruleList>
+	</orc:addOrchestration>
+
+	
+ <!--1 or more repetitions:-->
+         <ruleList>
+            <id>1</id>
+            <ownerID>2</ownerID>
+            <!--Optional:-->
+            <query>(18,22)</query>
+            <yesEdge>2</yesEdge>
+            <noEdge>0</noEdge>
+            <!--Optional:-->
+            <relativeResults>?</relativeResults>
+         </ruleList>
+		
+		<ruleList>
+            <id>2</id>
+            <ownerID>2</ownerID>
+            <!--Optional:-->
+            <query>(32).(33,44)</query>
+            <yesEdge>3</yesEdge>
+            <noEdge>0</noEdge>
+            <!--Optional:-->
+            <relativeResults>?</relativeResults>
+         </ruleList>
+
+		<ruleList>
+            <id>3</id>
+            <ownerID>2</ownerID>
+            <!--Optional:-->
+            <query>55</query>
+            <yesEdge>4</yesEdge>
+            <noEdge>0</noEdge>
+            <!--Optional:-->
+            <relativeResults>?</relativeResults>
+         </ruleList>
+
+         	<ruleList>
+            <id>4</id>
+            <ownerID>2</ownerID>
+            <!--Optional:-->
+            <query>(33).(44)</query>
+            <yesEdge>0</yesEdge>
+            <noEdge>0</noEdge>
+            <!--Optional:-->
+            <relativeResults>?</relativeResults>
+         </ruleList>
+		
+     </orc:addOrchestration>
+
+
+	 <!---------------------------------------------------------Second Orchestration:----------------------------------------------------->
+	 <orc:addOrchestration>
+
+			
+         <orchestration>
+            <id>2</id>
+            <ownerID>29</ownerID>
+            <startJobID>1</startJobID>
+         </orchestration>
+         <!--1 or more repetitions:-->
+         <jobList>
+            <id>1</id>
+            <owner>29</owner>
+            <!--Optional:-->
+            <description>name:Bilgehan surname:Kargin id:123456 gender:man</description>
+            <!--Optional:-->
+            <destination>10.1.90.19</destination>
+            <!--Optional:-->
+            <fileUrl>https://st2.depositphotos.com/3369547/11386/v/950/depositphotos_113863530-stock-illustration-avatar-man-icon-people-design.jpg </fileUrl>
+            <!--Optional:-->
+            <relatives>2,18,22,43,55</relatives>
+            <ruleId>10</ruleId>
+         </jobList>
+		
+		<jobList>
+            <id>2</id>
+            <owner>29</owner>
+            <!--Optional:-->
+            <description>name:Yusuf surname:Akdas id:133457 gender:man </description>
+            <!--Optional:-->
+            <destination>10.1.90.19</destination>
+            <!--Optional:-->
+            <fileUrl>https://st2.depositphotos.com/3369547/11386/v/950/depositphotos_113863530-stock-illustration-avatar-man-icon-people-design.jpg</fileUrl>
+            <!--Optional:-->
+            <relatives>2,18,22,43,55</relatives>
+            <ruleId>20</ruleId>
+         </jobList>
+
+		<jobList>
+            <id>3</id>
+            <owner>29</owner>
+            <!--Optional:-->
+            <description>name:Ezgi surname:Cakir id:273456 gender:woman</description>
+            <!--Optional:-->
+            <destination>10.1.90.19</destination>
+            <!--Optional:-->
+            <fileUrl>https://cdn5.vectorstock.com/i/1000x1000/98/89/woman-girl-female-hair-person-face-head-icon-vector-10189889.jpg</fileUrl>
+            <!--Optional:-->
+            <relatives>43,22</relatives>
+            <ruleId>30</ruleId>
+         </jobList>
+
+		<jobList>
+            <id>4</id>
+            <owner>29</owner>
+            <!--Optional:-->
+            <description>name:Fatiha surname:Beqirovski id:927656 gender:woman</description>
+            <!--Optional:-->
+            <destination>10.1.90.19</destination>
+            <!--Optional:-->
+            <fileUrl>https://cdn5.vectorstock.com/i/1000x1000/98/89/woman-girl-female-hair-person-face-head-icon-vector-10189889.jpg</fileUrl>
+            <!--Optional:-->
+            <relatives>43,22</relatives>
+            <ruleId>40</ruleId>
+         </jobList>
+
+ 		<jobList>
+            <id>5</id>
+            <owner>29</owner>
+            <!--Optional:-->
+            <description>name:Burak surname:Ozcelik id:777258 gender:man </description>
+            <!--Optional:-->
+            <destination>10.1.90.19</destination>
+            <!--Optional:-->
+            <fileUrl>https://st2.depositphotos.com/3369547/11386/v/950/depositphotos_113863530-stock-illustration-avatar-man-icon-people-design.jpg</fileUrl>
+            <!--Optional:-->
+            <relatives>2,18,22,43,55</relatives>
+            <ruleId>50</ruleId>
+         </jobList>
+
+		
+		<jobList>
+            <id>6</id>
+            <owner>29</owner>
+            <!--Optional:-->
+            <description>name:Beyza surname:Aydogmus id:426578 gender:woman</description>
+            <!--Optional:-->
+            <destination>10.1.90.19</destination>
+            <!--Optional:-->
+            <fileUrl>https://cdn5.vectorstock.com/i/1000x1000/98/89/woman-girl-female-hair-person-face-head-icon-vector-10189889.jpg</fileUrl>
+            <!--Optional:-->
+            <relatives>43,22</relatives>
+            <ruleId>60</ruleId>
+         </jobList>
+
+		
+		<jobList>
+            <id>7</id>
+            <owner>29</owner>
+            <!--Optional:-->
+            <description>name:Onur surname:Polattimur id:654123 gender:man </description>
+            <!--Optional:-->
+            <destination>10.1.90.19</destination>
+            <!--Optional:-->
+            <fileUrl>https://st2.depositphotos.com/3369547/11386/v/950/depositphotos_113863530-stock-illustration-avatar-man-icon-people-design.jpg</fileUrl>
+            <!--Optional:-->
+            <relatives>2,18,22,43,55</relatives>
+            <ruleId>70</ruleId>
+         </jobList>
+
+         	<jobList>
+            <id>8</id>
+            <owner>29</owner>
+            <!--Optional:-->
+            <description>name:Firat surname:Kizilirmak id:498231 gender:man </description>
+            <!--Optional:-->
+            <destination>10.1.90.19</destination>
+            <!--Optional:-->
+            <fileUrl>https://st2.depositphotos.com/3369547/11386/v/950/depositphotos_113863530-stock-illustration-avatar-man-icon-people-design.jpg</fileUrl>
+            <!--Optional:-->
+            <relatives>2,18,22,43,55</relatives>
+            <ruleId>80</ruleId>
+         </jobList>
+
+          <jobList>
+            <id>9</id>
+            <owner>29</owner>
+            <!--Optional:-->
+            <description>name:Hizir surname:Bayram id:963258 gender:man </description>
+            <!--Optional:-->
+            <destination>10.1.90.19</destination>
+            <!--Optional:-->
+            <fileUrl>https://st2.depositphotos.com/3369547/11386/v/950/depositphotos_113863530-stock-illustration-avatar-man-icon-people-design.jpg</fileUrl>
+            <!--Optional:-->
+            <relatives>2,18,22,43,55</relatives>
+            <ruleId>90</ruleId>
+         </jobList>     
+
+		
+		<jobList>
+            <id>10</id>
+            <owner>29</owner>
+            <!--Optional:-->
+            <description>name:Beyza surname:Aydogmus id:426578 gender:woman</description>
+            <!--Optional:-->
+            <destination>10.1.90.19</destination>
+            <!--Optional:-->
+            <fileUrl>https://cdn5.vectorstock.com/i/1000x1000/98/89/woman-girl-female-hair-person-face-head-icon-vector-10189889.jpg</fileUrl>
+            <!--Optional:-->
+            <relatives>43,22</relatives>
+            <ruleId>100</ruleId>
+         </jobList>
+	  		
+
+
+		 <!--1 or more repetitions:-->
+         <ruleList>
+            <id>10</id>
+            <ownerID>29</ownerID>
+            <!--Optional:-->
+            <query>(2,18).(22,43).(55)</query>
+            <yesEdge>20</yesEdge>
+            <noEdge>0</noEdge>
+            <!--Optional:-->
+            <relativeResults>?</relativeResults>
+         </ruleList>
+
+	  	<ruleList>
+            <id>20</id>
+            <ownerID>29</ownerID>
+            <!--Optional:-->
+            <query>(2,18).(22,43).(55)</query>
+            <yesEdge>30</yesEdge>
+            <noEdge>0</noEdge>
+            <!--Optional:-->
+            <relativeResults>?</relativeResults>
+         </ruleList>
+
+         <ruleList>
+            <id>30</id>
+            <ownerID>29</ownerID>
+            <!--Optional:-->
+            <query>(43).(22)</query>
+            <yesEdge>40</yesEdge>
+            <noEdge>0</noEdge>
+            <!--Optional:-->
+            <relativeResults>?</relativeResults>
+         </ruleList>
+
+          <ruleList>
+            <id>40</id>
+            <ownerID>29</ownerID>
+            <!--Optional:-->
+            <query>(43).(22)</query>
+            <yesEdge>50</yesEdge>
+            <noEdge>0</noEdge>
+            <!--Optional:-->
+            <relativeResults>?</relativeResults>
+         </ruleList>
+
+		<ruleList>
+            <id>50</id>
+            <ownerID>29</ownerID>
+            <!--Optional:-->
+            <query>(2,18).(22,43).(55)</query>
+            <yesEdge>60</yesEdge>
+            <noEdge>0</noEdge>
+            <!--Optional:-->
+            <relativeResults>?</relativeResults>
+         </ruleList>
+
+         <ruleList>
+            <id>60</id>
+            <ownerID>29</ownerID>
+            <!--Optional:-->
+            <query>(43).(22)</query>
+            <yesEdge>70</yesEdge>
+            <noEdge>0</noEdge>
+            <!--Optional:-->
+            <relativeResults>?</relativeResults>
+         </ruleList>
+
+		<ruleList>
+            <id>70</id>
+            <ownerID>29</ownerID>
+            <!--Optional:-->
+            <query>(2,18).(22,43).(55)</query>
+            <yesEdge>80</yesEdge>
+            <noEdge>0</noEdge>
+            <!--Optional:-->
+            <relativeResults>?</relativeResults>
+         </ruleList>
+
+         <ruleList>
+            <id>80</id>
+            <ownerID>29</ownerID>
+            <!--Optional:-->
+            <query>(2,18).(22,43).(55)</query>
+            <yesEdge>90</yesEdge>
+            <noEdge>0</noEdge>
+            <!--Optional:-->
+            <relativeResults>?</relativeResults>
+         </ruleList>
+
+         <ruleList>
+            <id>90</id>
+            <ownerID>29</ownerID>
+            <!--Optional:-->
+            <query>(2,18).(22,43).(55)</query>
+            <yesEdge>100</yesEdge>
+            <noEdge>0</noEdge>
+            <!--Optional:-->
+            <relativeResults>?</relativeResults>
+         </ruleList>
+	
+		    <ruleList>
+            <id>100</id>
+            <ownerID>29</ownerID>
+            <!--Optional:-->
+            <query>(43).(22)</query>
+            <yesEdge>0</yesEdge>
+            <noEdge>0</noEdge>
+            <!--Optional:-->
+            <relativeResults>?</relativeResults>
+         </ruleList>
+         
+	  </orc:addOrchestration>
+
+
+	
+   </soapenv:Body>
+</soapenv:Envelope>
