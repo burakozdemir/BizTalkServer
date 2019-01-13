@@ -146,4 +146,34 @@ public class InfoService {
 
         return jobList;
     }
+  
+    
+    
+    /**
+        Added a new method for gettin all job from admin panel.
+        MAY CHANGE LATER.
+    **/
+    @WebMethod
+    @XmlElement(name = "getAllJobs")
+    public ArrayList<JobResponse> getAllJobs() throws Exception {
+        ArrayList<Job> jobSet = handler.getAllJobs();
+        ArrayList<JobResponse> jobList = new ArrayList<>();
+
+        for(Job job : jobSet){
+            JobResponse info = new JobResponse();
+            info.setDescription(job.getDescription());
+            info.setDestination(job.getDestination());
+            info.setFileUrl(job.getFileUrl());
+            info.setId(job.getId());
+            info.setInsertDateTime(job.getInsertDateTime_Date());
+            info.setOwner(job.getOwner());
+            info.setRelatives(job.getRelatives());
+            info.setRuleId(job.getRuleId());
+            info.setStatus(job.getStatus());
+            info.setUpdateDateTime(job.getUpdateDateTime_Date());
+            jobList.add(info);
+        }
+
+        return jobList;
+    }
 }
