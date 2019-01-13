@@ -16,7 +16,7 @@ public class ApproveService {
 
   @WebMethod()
   public String updateUserApprove(@XmlElement(required = true, nillable = false) requestApprove ra){
-
+    System.out.println("Approve geldi");
     //guiden gelen degerler.
     userApp = ra.getUserApprove();
     jobId = ra.getJobId();
@@ -32,7 +32,11 @@ public class ApproveService {
     }
     //job tablosundan ruleid ye ulasip oradan rule tablosuna erisiyoruz.
     int ruleId = job.getRuleId();
-    String newRelative = BREClient.approve(ruleId, relativeId, userApp);
+    String newRelative="X";
+    if(ruleId!=0) {
+      newRelative = BREClient.approve(ruleId, relativeId, userApp);
+      System.out.println(ruleId + " " + newRelative);
+    }else newRelative = "T";
 
     //En son olarak rule tablosunu guncelledim.
     try {

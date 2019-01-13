@@ -18,8 +18,8 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class MainProcess {
-    private static DBHandler dbHandler = new DBHandler();
     private final static int WAIT_TIME_SECONDS = 300;
+    private static DBHandler dbHandler = new DBHandler();
 
     public static String createMessageFile(String message) throws IOException {
         Date date = new Date();
@@ -39,7 +39,6 @@ public class MainProcess {
 
     private static void work(Job job) throws IOException {
         System.out.println(String.format("Job: %d islendi", job.getId())); // job islendi.
-        String result = "Hello, world, from " + job.getOwner();
         String fileName = null;
         String fileUrl = job.getFileUrl();
         String[] destinations = job.getDestination().split(",");
@@ -63,8 +62,9 @@ public class MainProcess {
 
             URL url = new URL(ftpUrl);
             URLConnection conn = url.openConnection();
+
+
             OutputStream outputStream = conn.getOutputStream();
-            //FileInputStream inputStream = new FileInputStream(filePath);
             InputStream inputStream = new URL(filePath).openStream();
 
             //Send main file
@@ -93,6 +93,7 @@ public class MainProcess {
                 outputStreamMessage.write(buffer, 0, bytesRead);
 
             }
+
             inputStreamMessage.close();
             outputStreamMessage.close();
             inputStream.close();
@@ -107,16 +108,14 @@ public class MainProcess {
             ++count;
         }
 
+
+
     }
 
     private static char checkRule(Rule rule) throws Exception {
         Rule realRule = dbHandler.getRule(rule.getId());
         String relativeResults = realRule.getRelativeResults();
-        if (relativeResults.equals("X"))
-            return 'X';
-        if (relativeResults.equals("F"))
-            return 'F';
-        return 'T';
+        return relativeResults.toCharArray()[0];
     }
 
     private static void orchestrationRun(Orchestration orchestration) {
@@ -128,7 +127,7 @@ public class MainProcess {
             Job currentJob = dbHandler.getJob(currentJobID);
             boolean noRuleState = false;
 
-            if(currentJob.getRuleId()==0) {
+            if (currentJob.getRuleId() == 0) {
                 noRuleState = true;
             }
             while (currentJob.getRuleId() != 0) {
@@ -136,21 +135,20 @@ public class MainProcess {
                 char responseOfBRE;
 
                 StopWatch sw = StopWatch.createStarted();
-                while ((responseOfBRE = checkRule(ruleOfCurrentJob)) == 'X' && sw.getTime(TimeUnit.SECONDS) < WAIT_TIME_SECONDS){
+                while ((responseOfBRE = checkRule(ruleOfCurrentJob)) == 'X' && sw.getTime(TimeUnit.SECONDS) < WAIT_TIME_SECONDS) {
                     Thread.sleep(100); // Check every 100 ms
                 }
                 sw.stop();
 
                 if (responseOfBRE == 'T') {
+                    System.out.println("Response True geldi -> JobId: " + currentJob.getId());
                     work(currentJob);
                     dbHandler.updateJob(currentJobID, "Status", StatusCodes.SUCCESS);
                     currentJobID = ruleOfCurrentJob.getYesEdge();
-         /*----*/           BizLog.Log("1", String.valueOf(orchestration.getOwnerID()), LogLevel.UPDATE, currentJob, ruleOfCurrentJob, orchestration);
-                }
-                else{ // Not responded or False ( Bu durumda herhangi bi info vermiyoruz sanırım. ) // TODO?
-                    dbHandler.updateJob(currentJobID, "Status", StatusCodes.ERROR);
-        /*-----*/            currentJobID = ruleOfCurrentJob.getNoEdge();
-                    BizLog.Log("1", String.valueOf(orchestration.getOwnerID()), LogLevel.ERROR, currentJob, ruleOfCurrentJob, orchestration);
+                //    BizLog.Log("1", String.valueOf(orchestration.getOwnerID()), LogLevel.UPDATE, currentJob, ruleOfCurrentJob, orchestration);
+                } else { // Not responded or False ( Bu durumda herhangi bi info vermiyoruz sanırım. ) // TODO?
+                    currentJobID = ruleOfCurrentJob.getNoEdge();
+                 //   BizLog.Log("1", String.valueOf(orchestration.getOwnerID()), LogLevel.ERROR, currentJob, ruleOfCurrentJob, orchestration);
                 }
 
                 if (currentJobID == 0) { // Rule END e gidecekse orchestration status u success yapmıyoruz sanırım emin miyiz? TODO?
@@ -159,11 +157,12 @@ public class MainProcess {
 
                 currentJob = dbHandler.getJob(currentJobID);
 
-                if(currentJob.getRuleId()==0) {
+                if (currentJob.getRuleId() == 0) {
                     noRuleState = true;
                     break;
                 }
-        /*-----*/   BizLog.Log("1", String.valueOf(orchestration.getOwnerID()), LogLevel.INFO, currentJob, ruleOfCurrentJob, orchestration);
+
+//                BizLog.Log("1", String.valueOf(orchestration.getOwnerID()), LogLevel.INFO, currentJob, ruleOfCurrentJob, orchestration);
             }
             // Eger en son joba kadar varilirsa, o job da islenir.
             if (noRuleState) {
@@ -172,11 +171,12 @@ public class MainProcess {
 
             }
             dbHandler.updateOrchestration(orchestration.getId(), "Status", StatusCodes.SUCCESS);  //TODO ?
-            BizLog.Log("1", String.valueOf(orchestration.getOwnerID()), LogLevel.UPDATE, orchestration);
+            //BizLog.Log("1", String.valueOf(orchestration.getOwnerID()), LogLevel.UPDATE, orchestration);
 
         } catch (Exception e) {
+            e.printStackTrace();
             // TODO: log basacak.
-            System.out.println(String.format("*** An error occured while getting orchestration from DB: %s ***", e));
+            //System.out.println(String.format("*** An error occured while getting orchestration from DB: %s ***", e));
         }
     }
 
@@ -190,7 +190,7 @@ public class MainProcess {
                     Rule rule = dbHandler.getRule(job.getRuleId());
                     StopWatch sw = StopWatch.createStarted();
                     char response;
-                    while ((response = checkRule(rule)) == 'X' && sw.getTime(TimeUnit.SECONDS) < WAIT_TIME_SECONDS){
+                    while ((response = checkRule(rule)) == 'X' && sw.getTime(TimeUnit.SECONDS) < WAIT_TIME_SECONDS) {
                         System.out.println("geldi" + response);
                         Thread.sleep(100);
                     }
@@ -198,22 +198,24 @@ public class MainProcess {
 
                 }
 
-                if (canWork){
+                if (canWork) {
                     Rule rule = dbHandler.getRule(job.getRuleId());
                     work(job);
-                    /*----*/           BizLog.Log("1",String.valueOf(job.getOwner()),LogLevel.UPDATE,job,rule);
+                    /*----*/
+             //       BizLog.Log("1", String.valueOf(job.getOwner()), LogLevel.UPDATE, job, rule);
                     dbHandler.updateJob(job.getId(), "Status", StatusCodes.SUCCESS);
-                }
-                else {
+                } else {
                     Rule rule = dbHandler.getRule(job.getRuleId());
-                    /*----*/            BizLog.Log("1",String.valueOf(job.getOwner()),LogLevel.ERROR,job,rule);
+                    /*----*/
+              //      BizLog.Log("1", String.valueOf(job.getOwner()), LogLevel.ERROR, job, rule);
                     System.out.println("Not Approved job!");
                     dbHandler.updateJob(job.getId(), "Status", StatusCodes.ERROR);
                 }
             } catch (Exception e) {
                 try {
                     Rule rule = dbHandler.getRule(job.getRuleId());
-                    /*----*/           BizLog.Log("1",String.valueOf(job.getOwner()),LogLevel.FATAL,job,rule);
+                    /*----*/
+    //                BizLog.Log("1", String.valueOf(job.getOwner()), LogLevel.FATAL, job, rule);
                     dbHandler.updateJob(job.getId(), "Status", StatusCodes.ERROR);//TODO ?
                 } catch (Exception e1) {
                     e1.printStackTrace();
@@ -239,21 +241,21 @@ public class MainProcess {
         Publish.main(null);
 
         try {
-            while(true){
+            while (true) {
                 ArrayList<Orchestration> orchestrations = dbHandler.getOrchestrations();
-                if (orchestrations.size() == 0){
-                    System.out.println("No orchestrations waiting!");
+                if (orchestrations.size() == 0) {
+                    //System.out.println("No orchestrations waiting!");
                 }
-                for (Orchestration orch:
+                for (Orchestration orch :
                         orchestrations) {
                     Thread orchThread = new Thread(orchestrationExecution(orch));
                     orchThread.start();
                 }
                 ArrayList<Job> jobs = dbHandler.getJobs();
-                if (jobs.size() == 0){
-                    System.out.println("No single jobs waiting!");
+                if (jobs.size() == 0) {
+                    //System.out.println("No single jobs waiting!");
                 }
-                for (Job job:
+                for (Job job :
                         jobs) {
                     Thread jobThread = new Thread(singleJobExecution(job));
                     jobThread.start();

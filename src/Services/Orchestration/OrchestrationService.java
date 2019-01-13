@@ -1,15 +1,20 @@
 package Services.Orchestration;
 
+import BRE.BREClient;
+/*import BizTalkLog.Logger.BizLog;
+import BizTalkLog.Logger.LogLevel;*/
+import DB.DBHandler;
+import DB.Job;
+import DB.Orchestration;
+import DB.Rule;
+import Services.Orchestration.Requests.JobRequest;
+import Services.Orchestration.Requests.OrchestrationRequest;
+import Services.Orchestration.Requests.RuleRequest;
+import Services.StatusCodes;
+
 import javax.jws.WebService;
 import java.util.ArrayList;
 import java.util.List;
-
-import BRE.BREClient;
-import BizTalkLog.Logger.BizLog;
-import BizTalkLog.Logger.LogLevel;
-import DB.*;
-import Services.Orchestration.Requests.*;
-import Services.StatusCodes;
 
 @WebService(endpointInterface = "Services.Orchestration.IOrchestrationService",
         serviceName = "OrchestrationService")
@@ -22,7 +27,8 @@ public class OrchestrationService implements IOrchestrationService {
 
     /**
      * Introduce an orchestration.
-     * @param value Object that contains orchestration information.
+     *
+     * @param value        Object that contains orchestration information.
      * @param jobRequests  List that contains jobRequests of orchestration.
      * @param ruleRequests List that contains ruleRequests of orchestration.
      * @return Message.
@@ -31,8 +37,8 @@ public class OrchestrationService implements IOrchestrationService {
     public String addOrchestration(OrchestrationRequest value, List<JobRequest> jobRequests,
                                    List<RuleRequest> ruleRequests) {
         if (value.id == 0) {
-            BizLog.Log("1", String.valueOf(value.ownerID), LogLevel.ERROR,
-                    new Orchestration(value.ownerID, StatusCodes.ERROR, value.startJobID));
+            //BizLog.Log("1", String.valueOf(value.ownerID), LogLevel.ERROR,
+               //     new Orchestration(value.ownerID, StatusCodes.ERROR, value.startJobID));
             return "*** DB.OrchestrationRequest id could not be 0! ***";
         }
 
@@ -72,13 +78,13 @@ public class OrchestrationService implements IOrchestrationService {
         }
 
         //Updating all jobRequests with their associated ruleRequests with db ids.
-        for(int jobId : JobIdList){
+        for (int jobId : JobIdList) {
             if (jobId == 0) continue;
 
             Job workOn;
             try {
                 workOn = dbHandler.getJob(jobId);
-            } catch (Exception e){
+            } catch (Exception e) {
                 System.err.println("Error to access given id: " + jobId);
                 return String.format("*** Error to access given id (job): %d***", jobId);
             }
@@ -89,11 +95,14 @@ public class OrchestrationService implements IOrchestrationService {
                 // Update ruleId of the job.
                 dbHandler.updateJob(jobId, "RuleId", ruleId);
 
-                Rule rule = dbHandler.getRule(ruleId);
+                if (ruleId != 0) {
+                    Rule rule = dbHandler.getRule(ruleId);
 
-                BREClient.add(rule.getQuery(), rule.getId(), workOn.getRelatives());   // Return value kullanilmali. Return valuesu query formattan oturu hata verebilir.
+                    BREClient.add(rule.getQuery(), rule.getId(), workOn.getRelatives());   // Return value kullanilmali. Return valuesu query formattan oturu hata verebilir.
 
-                BizLog.Log("1", String.valueOf(value.ownerID), LogLevel.INFO, workOn, rule, actualOrch);
+                 //   BizLog.Log("1", String.valueOf(value.ownerID), LogLevel.INFO, workOn, rule, actualOrch);
+                }
+
             } catch (Exception e) {
                 System.err.println("Error to access given id: " + ruleId);
                 return String.format("*** Error to access given id (rule): %d***", ruleId);
@@ -122,18 +131,17 @@ public class OrchestrationService implements IOrchestrationService {
             return addJobSub(job) != -1 ? "Job has been added successfully!" : "*** An occurred while adding job ***";
         }
         rule.relativeResults = "X";
-        job.ruleId =  addRuleSub(rule);
+        job.ruleId = addRuleSub(rule);
 
         int ruleId = addJobSub(job);
-        BREClient.add(rule.query, ruleId, job.relatives);   // Return value kullanilmali. Return valuesu query formattan oturu hata verebilir.
-
-        return  ruleId != -1 ? "Job has been added with rule successfully!" : "*** An occurred while adding job with rule ***";
+        int s = BREClient.add(rule.query, ruleId, job.relatives);   // Return value kullanilmali. Return valuesu query formattan oturu hata verebilir.
+        return ruleId != -1 ? "Job has been added with rule successfully!" : "*** An occurred while adding job with rule ***";
     }
 
     /**
      * Remove job and rule, If rule exists.
      *
-     * @param jobID  ID of Job to be added.
+     * @param jobID ID of Job to be added.
      * @return Message
      */
     @Override
@@ -151,6 +159,7 @@ public class OrchestrationService implements IOrchestrationService {
 
     /**
      * Add given job to database.
+     *
      * @param value DB.JobRequest to be added to database.
      * @return If added, returns job id which is got from db, otherwise -1 to indicate an error.
      */
@@ -158,7 +167,7 @@ public class OrchestrationService implements IOrchestrationService {
         int dbJobId;
 
         Job actualJob = new Job(value.owner, value.description, value.destination, value.fileUrl, value.relatives, 0, value.ruleId);
-        if (value.id == -1){
+        if (value.id == -1) {
             actualJob.setStatus(StatusCodes.SINGLE_INITIAL_JOB);
         }
         try {
@@ -193,5 +202,5 @@ public class OrchestrationService implements IOrchestrationService {
         System.out.println("addRuleSub: " + value.id);
         return dbRuleId;
     }
-    
+
 }

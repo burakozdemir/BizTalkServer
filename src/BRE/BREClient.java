@@ -1,20 +1,19 @@
 package BRE;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.io.BufferedReader;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class BREClient {
     private static final String ruleUrl
             = "http://localhost:3000/rule";
-    private static String ruleParameters = "<rule id='%d'>" + "<clause>%s</clause>" + "<relatives>%s</relatives>" + "</rule>";
     private static final String answerUrl
             = "http://localhost:3000/rule/answer";
+    private static String ruleParameters = "<rule id='%d'>" + "<clause>%s</clause>" + "<relatives>%s</relatives>" + "</rule>";
     private static String answerParameters = "<response>\n" +
             "    <user_id>%d</user_id>\n" +
             "    <rule_id>%d</rule_id>\n" +
@@ -23,7 +22,7 @@ public class BREClient {
 
     private static HttpURLConnection conn;
 
-    private static String request(String url, String urlParameters){
+    private static String request(String url, String urlParameters) {
         byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
 
         try {
@@ -66,7 +65,7 @@ public class BREClient {
         String response = request(ruleUrl, String.format(ruleParameters, ruleID, query, relatives));
         response = response.toLowerCase();
 
-        if (response.contains("true")) {
+        if (response.contains("T")) {
             return 1;
         }
 
@@ -75,16 +74,7 @@ public class BREClient {
 
     public static String approve(int ruleID, int relativeID, String answer) {
         String response = request(answerUrl, String.format(answerParameters, relativeID, ruleID, answer));
-        response = response.toLowerCase();
-
-        if (response.contains("t")) {
-            return "T";
-        }
-
-        if (response.contains("f")){
-            return "F";
-        }
-
-        return "X";
+        System.out.println("response from bre" + response);
+        return response;
     }
 }
