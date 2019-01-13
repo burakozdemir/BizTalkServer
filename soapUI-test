@@ -1,0 +1,107 @@
+soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:orc="http://orchestration.server.com">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <orc:addOrchestration>
+         <orchestration>
+            <id>1</id>
+            <ownerID>29</ownerID>
+            <startJobID>1</startJobID>
+         </orchestration>
+         <!--1 or more repetitions:-->
+         <jobList>
+            <id>1</id>
+            <owner>2</owner>
+            <!--Optional:-->
+            <description>precondition: CSE 101</description>
+            <!--Optional:-->
+            <destination>10.1.90.54</destination>
+            <!--Optional:-->
+            <fileUrl>https://dosya.wmaraci.com/nedir/c-dili.png</fileUrl>
+            <!--Optional:-->
+            <relatives>18,22</relatives>
+            <ruleId>1</ruleId>
+         </jobList>
+		
+		<jobList>
+            <id>2</id>
+            <owner>2</owner>
+            <!--Optional:-->
+            <description>precondition: CSE102 </description>
+            <!--Optional:-->
+            <destination>10.1.90.54</destination>
+            <!--Optional:-->
+            <fileUrl>https://cdn.webtekno.com/media/cache/content_detail_v2/article/44132/evde-kendi-kendine-c-programlama-dilini-ogrenmek-isteyenlere-altin-degerinde-tavsiyeler-1523614183.png</fileUrl>
+            <!--Optional:-->
+            <relatives>32,33,44</relatives>
+            <ruleId>2</ruleId>
+         </jobList>
+
+		<jobList>
+            <id>3</id>
+            <owner>2</owner>
+            <!--Optional:-->
+            <description>precondition: CSE 241 </description>
+            <!--Optional:-->
+            <destination>10.1.90.54</destination>
+            <!--Optional:-->
+            <fileUrl>https://upload.wikimedia.org/wikipedia/tr/thumb/2/2e/Java_Logo.svg/1200px-Java_Logo.svg.png</fileUrl>
+            <!--Optional:-->
+            <relatives>55</relatives>
+            <ruleId>3</ruleId>
+         </jobList>
+
+		<jobList>
+            <id>4</id>
+            <owner>2</owner>
+            <!--Optional:-->
+            <description>precondition: CSE 222 </description>
+            <!--Optional:-->
+            <destination>10.1.90.54</destination>
+            <!--Optional:-->
+            <fileUrl>https://images-na.ssl-images-amazon.com/images/I/31INtMDDnUL._SX258_BO1,204,203,200_.jpg</fileUrl>
+            <!--Optional:-->
+            <relatives></relatives>
+            <ruleId>0</ruleId>
+         </jobList>
+         
+         <!--1 or more repetitions:-->
+         <ruleList>
+            <id>1</id>
+            <ownerID>2</ownerID>
+            <!--Optional:-->
+            <query>(18,22)</query>
+            <yesEdge>2</yesEdge>
+            <noEdge>0</noEdge>
+            <!--Optional:-->
+            <relativeResults>?</relativeResults>
+         </ruleList>
+		
+		<ruleList>
+            <id>2</id>
+            <ownerID>2</ownerID>
+            <!--Optional:-->
+            <query>(32).(33,44)</query>
+            <yesEdge>3</yesEdge>
+            <noEdge>0</noEdge>
+            <!--Optional:-->
+            <relativeResults>?</relativeResults>
+         </ruleList>
+
+		<ruleList>
+            <id>3</id>
+            <ownerID>2</ownerID>
+            <!--Optional:-->
+            <query>55</query>
+            <yesEdge>4</yesEdge>
+            <noEdge>0</noEdge>
+            <!--Optional:-->
+            <relativeResults>?</relativeResults>
+         </ruleList>
+		
+         
+      </orc:addOrchestration>
+   </soapenv:Body>
+</soapenv:Envelope>
+
+
+
