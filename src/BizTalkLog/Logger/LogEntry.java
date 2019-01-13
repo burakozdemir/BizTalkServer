@@ -188,7 +188,7 @@ public class LogEntry {
         this(logID, userID, level, job.getFileUrl());
         this.effectedID = -1;
         this.destinationIPs = job.getDestination();
-        this.relatives = job.getRelatives();
+        this.relatives = job.getRelatives().replaceAll(",","|");
         this.jobID = job.getId();
         this.ruleID = rule.getId();
         this.rule = rule.getRelativeResults();

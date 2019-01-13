@@ -68,4 +68,9 @@ public class Rule {
     public void setRelativeResults(String relativeResults) {
         this.relativeResults = relativeResults;
     }
+
+    @Override
+    public String toString() {
+        return id + ownerID + query + yesEdge + noEdge + relativeResults;
+    }
 }

@@ -43,8 +43,9 @@ public class AdminService {
             infoEndpoint = Endpoint.publish(infoServiceAddress, new InfoService());
             approveEndpoint = Endpoint.publish(approveServiceAddress, new ApproveService());
             System.out.println("----> Server has been started!");
+            return "*** Server has just been started! ***";
         }
-        return "*** Server has just been started! ***";
+        return "*** Server is running now! ***";
     }
 
     @WebMethod
@@ -54,8 +55,9 @@ public class AdminService {
             infoEndpoint.stop();
             approveEndpoint.stop();
             System.out.println("----> Server has been stopped!");
+            return "*** Server has just been stopped! ***";
         }
-        return "*** Server has just been stopped! ***";
+        return "*** Server was stopped! ***";
     }
 
     private static String getHostIp(){

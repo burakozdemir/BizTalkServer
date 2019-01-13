@@ -100,7 +100,10 @@ public class JobResponse {
         this.updateDateTime = updateDateTime;
     }
 
-
+    @Override
+    public String toString() {
+        return id + owner + description + destination + fileUrl + relatives + status + ruleId + insertDateTime.toString() + updateDateTime.toString();
+    }
     
     
 }

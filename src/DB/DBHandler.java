@@ -7,8 +7,6 @@ import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Date;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
@@ -94,10 +92,10 @@ public class DBHandler {
 
     }
 
-    public Set<Job> getAllJobs() throws Exception {
+    public ArrayList<Job> getAllJobs() throws Exception {
 
         Connection conn = getConnection();
-        Set<Job> jobs = new HashSet<>();
+        ArrayList<Job> jobs = new ArrayList<>();
 
         PreparedStatement preparedStmt = conn.prepareStatement("SELECT * FROM jobs");
         ResultSet rs = preparedStmt.executeQuery();
@@ -124,10 +122,10 @@ public class DBHandler {
         return jobs;
     }
 
-    public Set<Job> getJobSet(int JobOwner) throws Exception {
+    public ArrayList<Job> getJobSet(int JobOwner) throws Exception {
 
         Connection conn = getConnection();
-        Set<Job> jobs = new HashSet<Job>();
+        ArrayList<Job> jobs = new ArrayList<>();
 
         PreparedStatement preparedStmt = conn.prepareStatement("SELECT * FROM jobs WHERE JobOwner=?");
 
@@ -156,10 +154,10 @@ public class DBHandler {
         return jobs;
     }
 
-    public Set<Job> getJobs() throws Exception {
+    public ArrayList<Job> getJobs() throws Exception {
 
         Connection conn = getConnection();
-        Set<Job> jobs = new HashSet<Job>();
+        ArrayList<Job> jobs = new ArrayList<Job>();
 
         PreparedStatement preparedStmt = conn.prepareStatement("SELECT * FROM jobs WHERE Status = -1 ORDER BY InsertDateTime");
 
@@ -404,10 +402,10 @@ public class DBHandler {
         return job;
     }
 
-    public Set<Orchestration> getOrchestration(int OrchestrationOwner) throws Exception {
+    public ArrayList<Orchestration> getOrchestration(int OrchestrationOwner) throws Exception {
 
         Connection conn = getConnection();
-        Set<Orchestration> orchestrations = new HashSet<Orchestration>();
+        ArrayList<Orchestration> orchestrations = new ArrayList<>();
 
         PreparedStatement preparedStmt = conn.prepareStatement("SELECT * FROM orchestrations WHERE OrchestrationOwner=?");
 
@@ -427,10 +425,10 @@ public class DBHandler {
         return orchestrations;
     }
 
-    public Set<Orchestration> getOrchestrations() throws Exception {
+    public ArrayList<Orchestration> getOrchestrations() throws Exception {
 
         Connection conn = getConnection();
-        Set<Orchestration> orchestrations = new HashSet<Orchestration>();
+        ArrayList<Orchestration> orchestrations = new ArrayList<>();
 
         PreparedStatement preparedStmt = conn.prepareStatement("SELECT * FROM orchestrations WHERE Status = 0 ORDER BY InsertDateTime");
 

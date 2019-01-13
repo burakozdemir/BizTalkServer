@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><ns2:MyRequestApprove xmlns:ns2="http://your.namespace.com"><userApprove>true</userApprove><jobId>12</jobId><relativeId>321</relativeId></ns2:MyRequestApprove>

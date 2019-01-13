@@ -11,6 +11,16 @@ import java.io.Serializable;
 @XmlRootElement(name = "MyRequestApprove", namespace="http://your.namespace.com")
 public class requestApprove implements Serializable{
 
+    public requestApprove() {
+
+    }
+
+    public requestApprove(String userApprove, int jobId, int relativeId) {
+        this.userApprove = userApprove;
+        this.jobId = jobId;
+        this.relativeId = relativeId;
+    }
+
     @XmlElement(name = "userApprove", required = true)
     protected String userApprove;
     @XmlElement(name = "jobId", required = true)
@@ -28,5 +38,10 @@ public class requestApprove implements Serializable{
 
     public int getRelativeId() {
         return relativeId;
+    }
+
+    @Override
+    public String toString() {
+        return "| User approve : " + this.userApprove + " | Job Id " + this.jobId + " | Relative Id : " + this.relativeId + " |";
     }
 }

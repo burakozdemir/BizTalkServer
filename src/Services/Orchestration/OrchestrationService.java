@@ -2,7 +2,6 @@ package Services.Orchestration;
 
 import javax.jws.WebService;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import BRE.BREClient;
@@ -11,8 +10,6 @@ import BizTalkLog.Logger.LogLevel;
 import DB.*;
 import Services.Orchestration.Requests.*;
 import Services.StatusCodes;
-import com.sun.jmx.snmp.agent.SnmpUserDataFactory;
-import com.sun.org.apache.xpath.internal.operations.Or;
 
 @WebService(endpointInterface = "Services.Orchestration.IOrchestrationService",
         serviceName = "OrchestrationService")
@@ -86,8 +83,8 @@ public class OrchestrationService implements IOrchestrationService {
                 return String.format("*** Error to access given id (job): %d***", jobId);
             }
 
-            int ruleId = RuleIdList.get(workOn.getRuleId());
-            workOn.setRuleId(ruleId);
+            int ruleId = RuleIdList.get(workOn.getRuleId()); // BURADA NE OLUYOR
+            workOn.setRuleId(ruleId); // BURADA NE OLUYOR
             try {
                 // Update ruleId of the job.
                 dbHandler.updateJob(jobId, "RuleId", ruleId);
@@ -118,7 +115,7 @@ public class OrchestrationService implements IOrchestrationService {
     @Override
     public String addJobRule(JobRequest job, RuleRequest rule) {
         if (job.id == 0)
-            return "*** An occurred while adding job ***";
+            return "*** An error occurred while adding job ***";
         job.id = -1;
         if (job.ruleId == 0) {
             System.out.println("addJobRule" + job.id + " Hata burada");
@@ -131,6 +128,25 @@ public class OrchestrationService implements IOrchestrationService {
         BREClient.add(rule.query, ruleId, job.relatives);   // Return value kullanilmali. Return valuesu query formattan oturu hata verebilir.
 
         return  ruleId != -1 ? "Job has been added with rule successfully!" : "*** An occurred while adding job with rule ***";
+    }
+
+    /**
+     * Remove job and rule, If rule exists.
+     *
+     * @param jobID  ID of Job to be added.
+     * @return Message
+     */
+    @Override
+    public String removeJob(int jobID) {
+        try {
+            Job job = dbHandler.getJob(jobID);
+            if (job.getStatus() == StatusCodes.REMOVED)
+                return "Job has already been removed!";
+            dbHandler.updateJob(jobID, "Status", StatusCodes.REMOVED);
+        } catch (Exception e) {
+            return "*** An error occurred while removing job ***";
+        }
+        return String.format("*** Job has just been removed! (ID: %d) ***", jobID);
     }
 
     /**
@@ -177,14 +193,5 @@ public class OrchestrationService implements IOrchestrationService {
         System.out.println("addRuleSub: " + value.id);
         return dbRuleId;
     }
-
-    /**
-     * Make X relative result.
-     *
-     * @param relatives Relatives.
-     * @return X
-     */
-    private String makeXRelativeResult(String relatives) {
-        return "X";
-    }
+    
 }

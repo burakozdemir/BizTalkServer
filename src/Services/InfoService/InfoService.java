@@ -4,6 +4,7 @@ import DB.DBHandler;
 import DB.Job;
 import DB.Orchestration;
 import DB.Rule;
+import Services.StatusCodes;
 
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -12,7 +13,6 @@ import javax.xml.bind.annotation.XmlElement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 @WebService(serviceName = "InfoService")
 public class InfoService {
@@ -41,23 +41,24 @@ public class InfoService {
     @XmlElement(name = "getJobFromOwner")
     public ArrayList<JobResponse> getJobsFromOwner(@WebParam(name = "ownerID") @XmlElement(required = true)
                                                                Integer ownerId) throws Exception {
-        System.out.println(ownerId);
-        Set<Job> jobSet = handler.getJobSet(ownerId);
+        ArrayList<Job> jobSet = handler.getJobSet(ownerId);
         ArrayList<JobResponse> jobList = new ArrayList<>();
 
         for(Job job : jobSet){
-            JobResponse info = new JobResponse();
-            info.setDescription(job.getDescription());
-            info.setDestination(job.getDestination());
-            info.setFileUrl(job.getFileUrl());
-            info.setId(job.getId());
-            info.setInsertDateTime(job.getInsertDateTime_Date());
-            info.setOwner(job.getOwner());
-            info.setRelatives(job.getRelatives());
-            info.setRuleId(job.getRuleId());
-            info.setStatus(job.getStatus());
-            info.setUpdateDateTime(job.getUpdateDateTime_Date());
-            jobList.add(info);
+            if (job.getStatus() != StatusCodes.REMOVED) {
+                JobResponse info = new JobResponse();
+                info.setDescription(job.getDescription());
+                info.setDestination(job.getDestination());
+                info.setFileUrl(job.getFileUrl());
+                info.setId(job.getId());
+                info.setInsertDateTime(job.getInsertDateTime_Date());
+                info.setOwner(job.getOwner());
+                info.setRelatives(job.getRelatives());
+                info.setRuleId(job.getRuleId());
+                info.setStatus(job.getStatus());
+                info.setUpdateDateTime(job.getUpdateDateTime_Date());
+                jobList.add(info);
+            }
         }
 
         return jobList;
@@ -67,7 +68,7 @@ public class InfoService {
     @XmlElement(name = "getOrchestration")
     public ArrayList<OrchestrationResponse> getOrchestration(@WebParam(name = "ownerID") @XmlElement(required = true)
                                                                          Integer ownerId) throws Exception {
-        Set<Orchestration> orc = handler.getOrchestration(ownerId);
+        ArrayList<Orchestration> orc = handler.getOrchestration(ownerId);
         ArrayList<OrchestrationResponse> orcList = new ArrayList<>();
 
         for (Orchestration temp : orc) {
@@ -86,17 +87,16 @@ public class InfoService {
 
     @WebMethod
     @XmlElement(name = "getRule")
-    public RuleResponse getRule(@WebParam(name = "ruleID") @XmlElement(required = true)
-                                            Integer ruleId) throws Exception {
+    public RuleResponse getRule(@WebParam(name = "ruleID") @XmlElement(required = true)Integer ruleId) throws Exception {
         Rule rule = handler.getRule(ruleId.intValue());
         RuleResponse info = new RuleResponse();
 
         info.setId(rule.getId());
         info.setNoEdge(rule.getNoEdge());
         info.setOwnerID(rule.getOwnerID());
-        rule.setQuery(rule.getQuery());
-        rule.setRelativeResults(rule.getRelativeResults());
-        rule.setYesEdge(rule.getYesEdge());
+        info.setQuery(rule.getQuery());
+        info.setRelativeResults(rule.getRelativeResults());
+        info.setYesEdge(rule.getYesEdge());
 
         return info;
     }
@@ -122,13 +122,13 @@ public class InfoService {
     @XmlElement(name = "getJobFromRelative")
     public ArrayList<JobResponse> getJobsFromRelative(@WebParam(name = "relativeID") @XmlElement(required = true)
                                                            Integer relativeId) throws Exception {
-        Set<Job> jobSet = handler.getAllJobs();
+        ArrayList<Job> jobSet = handler.getAllJobs();
         ArrayList<JobResponse> jobList = new ArrayList<>();
 
         for(Job job : jobSet){
             String relatives = job.getRelatives();
             List<String> reList = Arrays.asList(relatives.split("\\s*,\\s*"));
-            if(reList.contains(Integer.toString(relativeId))){
+            if(job.getStatus() != StatusCodes.REMOVED && reList.contains(Integer.toString(relativeId))){
                 JobResponse info = new JobResponse();
                 info.setDescription(job.getDescription());
                 info.setDestination(job.getDestination());

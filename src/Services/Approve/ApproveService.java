@@ -3,19 +3,16 @@ package Services.Approve;
 import BRE.BREClient;
 import DB.DBHandler;
 import DB.Job;
-import DB.Rule;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.ws.Endpoint;
-import java.util.Arrays;
-import java.util.List;
 
 @WebService()
 public class ApproveService {
   private String userApp;
   private int jobId, relativeId;
+
 
   @WebMethod()
   public String updateUserApprove(@XmlElement(required = true, nillable = false) requestApprove ra){
