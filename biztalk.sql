@@ -19,6 +19,7 @@ CREATE TABLE `jobs` (
   `InsertDateTime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `UpdateDateTime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `Description` text COLLATE utf8_turkish_ci NOT NULL,
+  `OrchFlag` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`JobId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci;
 

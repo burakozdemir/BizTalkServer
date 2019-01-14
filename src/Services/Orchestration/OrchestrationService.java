@@ -97,6 +97,8 @@ public class OrchestrationService implements IOrchestrationService {
 
                 if (ruleId != 0) {
                     Rule rule = dbHandler.getRule(ruleId);
+                    System.out.println(rule);
+                    System.out.println("--------------> " + rule.getQuery() + " " + rule.getId() + " " + workOn.getRelatives());
 
                     BREClient.add(rule.getQuery(), rule.getId(), workOn.getRelatives());   // Return value kullanilmali. Return valuesu query formattan oturu hata verebilir.
 
@@ -134,6 +136,7 @@ public class OrchestrationService implements IOrchestrationService {
         job.ruleId = addRuleSub(rule);
 
         int ruleId = addJobSub(job);
+        System.out.println("***********  " + rule.query +" " + ruleId +" "+ job.relatives);
         int s = BREClient.add(rule.query, ruleId, job.relatives);   // Return value kullanilmali. Return valuesu query formattan oturu hata verebilir.
         return ruleId != -1 ? "Job has been added with rule successfully!" : "*** An occurred while adding job with rule ***";
     }
@@ -150,6 +153,11 @@ public class OrchestrationService implements IOrchestrationService {
             Job job = dbHandler.getJob(jobID);
             if (job.getStatus() == StatusCodes.REMOVED)
                 return "Job has already been removed!";
+            int ruleId = job.getRuleId();
+            if (ruleId != 0) {
+                dbHandler.removeRule(ruleId);
+                System.out.println("jkahdjkhsdjkashdkjasdhjkasdhjkashdlkjahskdjhasdj");
+            }
             dbHandler.updateJob(jobID, "Status", StatusCodes.REMOVED);
         } catch (Exception e) {
             return "*** An error occurred while removing job ***";
@@ -166,7 +174,8 @@ public class OrchestrationService implements IOrchestrationService {
     private int addJobSub(JobRequest value) {
         int dbJobId;
 
-        Job actualJob = new Job(value.owner, value.description, value.destination, value.fileUrl, value.relatives, 0, value.ruleId);
+        System.out.println(value.owner + " " + value.description + " " + value.destination + " " + value.fileUrl + " " + value.relatives + " " + 0 + " " +value.ruleId + " " + value.orchFlag);
+        Job actualJob = new Job(value.owner, value.description, value.destination, value.fileUrl, value.relatives, 0, value.ruleId, value.orchFlag);
         if (value.id == -1) {
             actualJob.setStatus(StatusCodes.SINGLE_INITIAL_JOB);
         }

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import static org.junit.Assert.*;
 
 public class InfoServiceTest {
-
+/*
     @Test
     public void getJob() throws Exception {
         InfoService inf_ser = new InfoService();
@@ -29,10 +29,10 @@ public class InfoServiceTest {
         assertEquals(sample2.toString(), inf_ser.getJob(id2).toString());
     }
 
-    /*
-    After testing, database needs to be emptied so that the jobs that are already written into database in previous test
-    can't taken again for every test.
-    */
+
+    //After testing, database needs to be emptied so that the jobs that are already written into database in previous test
+    //can't taken again for every test.
+
     @Test
     public void getJobsFromOwner() throws Exception {
         InfoService inf_ser = new InfoService();
@@ -140,4 +140,5 @@ public class InfoServiceTest {
         }
 
     }
+    */
 }

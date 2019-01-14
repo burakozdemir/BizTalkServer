@@ -115,7 +115,7 @@ public class MainProcess {
     private static char checkRule(Rule rule) throws Exception {
         Rule realRule = dbHandler.getRule(rule.getId());
         String relativeResults = realRule.getRelativeResults();
-        return relativeResults.toCharArray()[0];
+        return relativeResults == null ? 'Q' : relativeResults.toCharArray()[0];
     }
 
     private static void orchestrationRun(Orchestration orchestration) {
@@ -145,10 +145,8 @@ public class MainProcess {
                     work(currentJob);
                     dbHandler.updateJob(currentJobID, "Status", StatusCodes.SUCCESS);
                     currentJobID = ruleOfCurrentJob.getYesEdge();
-                //    BizLog.Log("1", String.valueOf(orchestration.getOwnerID()), LogLevel.UPDATE, currentJob, ruleOfCurrentJob, orchestration);
                 } else { // Not responded or False ( Bu durumda herhangi bi info vermiyoruz sanırım. ) // TODO?
                     currentJobID = ruleOfCurrentJob.getNoEdge();
-                 //   BizLog.Log("1", String.valueOf(orchestration.getOwnerID()), LogLevel.ERROR, currentJob, ruleOfCurrentJob, orchestration);
                 }
 
                 if (currentJobID == 0) { // Rule END e gidecekse orchestration status u success yapmıyoruz sanırım emin miyiz? TODO?
@@ -162,7 +160,6 @@ public class MainProcess {
                     break;
                 }
 
-//                BizLog.Log("1", String.valueOf(orchestration.getOwnerID()), LogLevel.INFO, currentJob, ruleOfCurrentJob, orchestration);
             }
             // Eger en son joba kadar varilirsa, o job da islenir.
             if (noRuleState) {
@@ -171,7 +168,6 @@ public class MainProcess {
 
             }
             dbHandler.updateOrchestration(orchestration.getId(), "Status", StatusCodes.SUCCESS);  //TODO ?
-            //BizLog.Log("1", String.valueOf(orchestration.getOwnerID()), LogLevel.UPDATE, orchestration);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -201,21 +197,15 @@ public class MainProcess {
                 if (canWork) {
                     Rule rule = dbHandler.getRule(job.getRuleId());
                     work(job);
-                    /*----*/
-             //       BizLog.Log("1", String.valueOf(job.getOwner()), LogLevel.UPDATE, job, rule);
                     dbHandler.updateJob(job.getId(), "Status", StatusCodes.SUCCESS);
                 } else {
                     Rule rule = dbHandler.getRule(job.getRuleId());
-                    /*----*/
-              //      BizLog.Log("1", String.valueOf(job.getOwner()), LogLevel.ERROR, job, rule);
                     System.out.println("Not Approved job!");
                     dbHandler.updateJob(job.getId(), "Status", StatusCodes.ERROR);
                 }
             } catch (Exception e) {
                 try {
                     Rule rule = dbHandler.getRule(job.getRuleId());
-                    /*----*/
-    //                BizLog.Log("1", String.valueOf(job.getOwner()), LogLevel.FATAL, job, rule);
                     dbHandler.updateJob(job.getId(), "Status", StatusCodes.ERROR);//TODO ?
                 } catch (Exception e1) {
                     e1.printStackTrace();

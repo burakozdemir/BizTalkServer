@@ -82,6 +82,7 @@ public class DBHandler {
             job.setRuleId(rs.getInt("RuleId"));
             job.setInsertDateTime(rs.getString("InsertDateTime"));
             job.setUpdateDateTime(rs.getString("UpdateDateTime"));
+            job.setOrchFlag(rs.getInt("OrchFlag"));
         }
 
         closePreparedStatement(preparedStmt);
@@ -112,6 +113,7 @@ public class DBHandler {
             job.setInsertDateTime(rs.getString("InsertDateTime"));
             job.setUpdateDateTime(rs.getString("UpdateDateTime"));
             job.setDescription(rs.getString("Description"));
+            job.setOrchFlag(rs.getInt("OrchFlag"));
             jobs.add(job);
         }
 
@@ -144,6 +146,7 @@ public class DBHandler {
             job.setInsertDateTime(rs.getString("InsertDateTime"));
             job.setUpdateDateTime(rs.getString("UpdateDateTime"));
             job.setDescription(rs.getString("Description"));
+            job.setOrchFlag(rs.getInt("OrchFlag"));
             jobs.add(job);
         }
 
@@ -175,6 +178,8 @@ public class DBHandler {
             job.setInsertDateTime(rs.getString("InsertDateTime"));
             job.setUpdateDateTime(rs.getString("UpdateDateTime"));
             job.setDescription(rs.getString("Description"));
+            job.setOrchFlag(rs.getInt("OrchFlag"));
+
             jobs.add(job);
         }
 
@@ -190,8 +195,8 @@ public class DBHandler {
 
         Connection conn = getConnection();
         PreparedStatement preparedStmt = conn.prepareStatement(" INSERT INTO jobs ( JobOwner, Description, " +
-                "Destination, FileUrl, Relatives,Status, RuleId, InsertDateTime, UpdateDateTime)"
-                + " values ( ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                "Destination, FileUrl, Relatives,Status, RuleId, InsertDateTime, UpdateDateTime, OrchFlag)"
+                + " values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
         preparedStmt.setInt(1, job.getOwner());
         preparedStmt.setString(2, job.getDescription());
@@ -202,6 +207,7 @@ public class DBHandler {
         preparedStmt.setInt(7, job.getRuleId());
         preparedStmt.setString(8, job.getInsertDateTime());
         preparedStmt.setString(9, job.getUpdateDateTime());
+        preparedStmt.setInt(10, job.getOrchFlag());
 
         String query = ((JDBC4PreparedStatement) preparedStmt).asSql();
         preparedStmt.executeUpdate(query, RETURN_GENERATED_KEYS);
@@ -393,6 +399,7 @@ public class DBHandler {
             job.setRuleId(rs.getInt("RuleId"));
             job.setInsertDateTime(rs.getString("InsertDateTime"));
             job.setUpdateDateTime(rs.getString("UpdateDateTime"));
+            job.setOrchFlag(rs.getInt("OrchestrationId"));
         }
 
         closePreparedStatement(preparedStmt);
@@ -521,7 +528,7 @@ public class DBHandler {
     }
 
     public ArrayList<RulesAndJobs> getRulesAndJobs(int ownerID) throws Exception {
-        Connection conn = getConnection();
+      /*  Connection conn = getConnection();
         PreparedStatement preparedStmt = conn.prepareStatement("SELECT * FROM orchestrations WHERE OrchestrationOwner = ?");
 
         preparedStmt.setInt(1, ownerID);
@@ -580,11 +587,12 @@ public class DBHandler {
         closeConnection(conn);
 
         return rulesAndJobsArrayList;
-
+*/
+        return new ArrayList<>();
     }
 
     public ArrayList<Job> getRulesAndJobs() throws Exception {
-        Connection conn = getConnection();
+     /*   Connection conn = getConnection();
         PreparedStatement preparedStmt = conn.prepareStatement("SELECT * FROM orchestrations");
 
         ResultSet rs = preparedStmt.executeQuery();
@@ -639,7 +647,40 @@ public class DBHandler {
         closeResultSet(rs);
         closeConnection(conn);
 
-        return rulesAndJobs.getJobs();
+        return rulesAndJobs.getJobs();*/
+     return new ArrayList<Job>();
     }
 
+    public ArrayList<Job> getUnorchestrainedJobs() throws Exception {
+        Connection conn = getConnection();
+        PreparedStatement preparedStmt = conn.prepareStatement("SELECT * FROM jobs WHERE OrchFlag = 0");
+        ResultSet rs = preparedStmt.executeQuery();
+        ArrayList<Job> jobList = new ArrayList<>();
+        while (rs.next()) {
+            Job job = new Job();
+            job.setId(rs.getInt("JobId"));
+            job.setOwner(rs.getInt("JobOwner"));
+            job.setDescription(rs.getString("Description"));
+            job.setDestination(rs.getString("Destination"));
+            job.setFileUrl(rs.getString("FileUrl"));
+            job.setRelatives(rs.getString("Relatives"));
+            job.setStatus(rs.getInt("Status"));
+            job.setRuleId(rs.getInt("RuleId"));
+            job.setInsertDateTime(rs.getString("InsertDateTime"));
+            job.setUpdateDateTime(rs.getString("UpdateDateTime"));
+            jobList.add(job);
+        }
+
+        return jobList;
+    }
+
+    public void removeRule(int removedRuleId) throws Exception {
+        Connection conn = getConnection();
+        PreparedStatement preparedStmt = conn.prepareStatement("DELETE FROM rules WHERE RuleId = ?");
+        preparedStmt.setInt(1, removedRuleId);
+        preparedStmt.execute();
+
+        closePreparedStatement(preparedStmt);
+        closeConnection(conn);
+    }
 }

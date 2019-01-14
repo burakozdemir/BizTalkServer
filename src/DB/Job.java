@@ -15,6 +15,7 @@ public class Job {
     private int ruleId;
     private Date insertDateTime;
     private Date updateDateTime;
+    private int orchFlag;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -23,7 +24,7 @@ public class Job {
     }
 
     public Job(int owner,String description,String destination,String fileUrl,
-               String relatives,int status, int ruleId ){
+               String relatives,int status, int ruleId, int orchFlag){
         this.owner = owner;
         this.description = description;
         this.destination = destination;
@@ -33,6 +34,7 @@ public class Job {
         this.ruleId = ruleId;
         this.insertDateTime = new Date();
         this.updateDateTime = new Date();
+        this.orchFlag = orchFlag;
     }
 
     public int getId() {
@@ -131,9 +133,18 @@ public class Job {
         this.updateDateTime = this.dateFormat.parse(update);
     }
 
+    public int getOrchFlag() {
+        return orchFlag;
+    }
+
+    public void setOrchFlag(int orchFlag) {
+        this.orchFlag = orchFlag;
+    }
+
+
     @Override
     public String toString() {
-        return id + owner + description + destination + fileUrl + relatives + status + ruleId + insertDateTime.toString() + updateDateTime.toString();
+        return id + owner + description + destination + fileUrl + relatives + status + ruleId + insertDateTime.toString() + updateDateTime.toString() + orchFlag;
     }
 }
 
