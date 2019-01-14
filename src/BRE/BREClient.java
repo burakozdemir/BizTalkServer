@@ -64,6 +64,7 @@ public class BREClient {
     public static int add(String query, int ruleID, String relatives) {
         String response = request(ruleUrl, String.format(ruleParameters, ruleID, query, relatives));
         response = response.toLowerCase();
+        System.out.println(response);
 
         if (response.contains("T")) {
             return 1;

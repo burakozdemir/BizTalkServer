@@ -19,8 +19,9 @@ public class JobResponse {
     private int ruleId;
     private Date insertDateTime;
     private Date updateDateTime;
+    private int orchFlag;
 
-    public JobResponse(int id, int owner, String description, String destination, String fileUrl, String relatives, int status, int ruleId, Date insertDateTime, Date updateDateTime) {
+    public JobResponse(int id, int owner, String description, String destination, String fileUrl, String relatives, int status, int ruleId, Date insertDateTime, Date updateDateTime, int orchFlag) {
         this.id = id;
         this.owner = owner;
         this.description = description;
@@ -31,6 +32,7 @@ public class JobResponse {
         this.ruleId = ruleId;
         this.insertDateTime = insertDateTime;
         this.updateDateTime = updateDateTime;
+        this.orchFlag = orchFlag;
     }
 
     public JobResponse() {
@@ -117,9 +119,17 @@ public class JobResponse {
         this.updateDateTime = updateDateTime;
     }
 
+    public int getOrchFlag() {
+        return orchFlag;
+    }
+
+    public void setOrchFlag(int orchFlag) {
+        this.orchFlag = orchFlag;
+    }
+
     @Override
     public String toString() {
-        return id + owner + description + destination + fileUrl + relatives + status + ruleId + insertDateTime.toString() + updateDateTime.toString();
+        return id + owner + description + destination + fileUrl + relatives + status + ruleId + insertDateTime.toString() + updateDateTime.toString() + orchFlag;
     }
     
     
