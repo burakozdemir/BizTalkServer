@@ -26,7 +26,7 @@ public interface IOrchestrationService {
     @WebResult(name = "message")
     String addOrchestration(@WebParam(name = "orchestration") @XmlElement(required = true) OrchestrationRequest value,
                             @WebParam(name = "jobList") @XmlElement(required = true) List<JobRequest> jobRequests,
-                            @WebParam(name = "ruleList") @XmlElement(required = true) List<RuleRequest> ruleRequests);
+                            @WebParam(name = "ruleList") List<RuleRequest> ruleRequests);
 
     /**
      * Add job and rule. (Rule is optional.)

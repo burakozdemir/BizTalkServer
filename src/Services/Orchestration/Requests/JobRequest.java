@@ -8,5 +8,6 @@ public class JobRequest {
     public String fileUrl;
     public String relatives;
     public int ruleId;
+    public int nextJobId;
     public int orchFlag;
 }
