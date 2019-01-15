@@ -65,7 +65,6 @@ public class AdminService {
             // tek stringli LOG //System.out.println("----> Server has been stopped!");
             return "*** Server was stopped! ***";
         }
-
     }
 
     private static String getHostIp(){

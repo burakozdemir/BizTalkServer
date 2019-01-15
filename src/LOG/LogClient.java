@@ -107,16 +107,16 @@ public class LogClient {
 
 
     public static void LogRuleUpdate(Rule oldRule,Rule newRule) {
-        String response = BREClient.request(logRuleUpdateUrl,  String.format(ruleUpdateParam , oldRule.getId(),oldRule.getOwnerID(),oldRule.getQuery(),
+      /*  String response = BREClient.request(logRuleUpdateUrl,  String.format(ruleUpdateParam , oldRule.getId(),oldRule.getOwnerID(),oldRule.getQuery(),
                 oldRule.getYesEdge(),oldRule.getNoEdge(),oldRule.getRelativeResults(),newRule.getId(),newRule.getOwnerID(),newRule.getQuery(),
                 newRule.getYesEdge(),newRule.getNoEdge(),newRule.getRelativeResults()));
         response = response.toLowerCase();
-        System.out.println(response);
+        System.out.println(response);*/
     }
 
 
     public static void LogJobRule(Job job, Rule rule) {
-        String response;
+     /*   String response;
         if(rule == null){
             response = BREClient.request(logJobDescUrl,  String.format(jobDescParam,job.getId(),job.getOwner(),job.getDescription(),
                     job.getDestination(),job.getFileUrl(),job.getRelatives(),job.getStatus(),job.getRuleId(),
@@ -130,34 +130,34 @@ public class LogClient {
         }
 
         response = response.toLowerCase();
-        System.out.println(response);
+        System.out.println(response);*/
     }
 
 
     public static void LogJobDesc(Job job, String description) {
-        String response = BREClient.request(logJobDescUrl,
+       /* String response = BREClient.request(logJobDescUrl,
                 String.format(jobDescParam ,
                         job.getId(), job.getOwner(), job.getDescription(), job.getDestination(),
                         job.getFileUrl(), job.getRelatives(), job.getStatus(), job.getRuleId(),
                         job.getInsertDateTime(), job.getUpdateDateTime(), description));
         response = response.toLowerCase();
 
-        System.out.println(response);
+        System.out.println(response);*/
     }
 
     public static void LogOrchDesc(Orchestration orchestration, String description) {
-        String response = BREClient.request(logOrchDescUrl,
+/*        String response = BREClient.request(logOrchDescUrl,
                 String.format(orchDescParam ,
                         orchestration.getId(), orchestration.getOwnerID(), orchestration.getStatus(),
                         orchestration.getStartJobID(), orchestration.getInsertDateTime(),
                         orchestration.getUpdateDateTime(), description));
         response = response.toLowerCase();
 
-        System.out.println(response);
+        System.out.println(response);*/
     }
 
     public static void LogOrch(OrchestrationCapsule orchestration) {
-        String response = BREClient.request(logOrchUrl,
+       /* String response = BREClient.request(logOrchUrl,
                 String.format(orchParam ,
                         orchestration.getId(), orchestration.getOwnerID(), orchestration.getStatus(),
                         orchestration.getStartJobID(), orchestration.getInsertDateTime(),
@@ -165,6 +165,6 @@ public class LogClient {
                         orchestration.getJobs().toString(), orchestration.getRules().toString()));
         response = response.toLowerCase();
 
-        System.out.println(response);
+        System.out.println(response);*/
     }
 }

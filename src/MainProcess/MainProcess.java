@@ -20,14 +20,12 @@ import java.util.concurrent.TimeUnit;
 public class MainProcess {
     private final static int WAIT_TIME_SECONDS = 300;
     private static DBHandler dbHandler = new DBHandler();
+    public static ArrayList<Thread> jobThreadList = new ArrayList<>();
 
     public static String createMessageFile(String message) throws IOException {
         Date date = new Date();
-
         long time = date.getTime();
-
         long ts = System.currentTimeMillis() / 1000L;
-
 
         try (PrintWriter out = new PrintWriter("temp/" + ts + ".message")) {
             out.println(message);
@@ -147,7 +145,13 @@ public class MainProcess {
                     work(currentJob);
                     dbHandler.updateJob(currentJobID, "Status", StatusCodes.SUCCESS);
                     currentJobID = ruleOfCurrentJob.getYesEdge();
-                } else { // Not responded or False ( Bu durumda herhangi bi info vermiyoruz sanırım. ) // TODO?
+                } else if (responseOfBRE == 'X'){ // Not responded or False ( Bu durumda herhangi bi info vermiyoruz sanırım. ) // TODO?
+                    dbHandler.updateJobsSuccesfully(orchestration, StatusCodes.ERROR);
+                    dbHandler.updateOrchestration(orchestration.getId(), "Status", StatusCodes.ERROR);
+                    System.out.println("--------------------------ERROR");
+                    return;
+                } else {
+                    dbHandler.updateJob(currentJobID, "Status", StatusCodes.NOT_ACCEPTED);
                     currentJobID = ruleOfCurrentJob.getNoEdge();
                 }
 
@@ -170,13 +174,13 @@ public class MainProcess {
 
             }
             dbHandler.updateOrchestration(orchestration.getId(), "Status", StatusCodes.SUCCESS);  //TODO ?
+            dbHandler.updateJobsSuccesfully(orchestration, StatusCodes.SUCCESS);
 
         } catch (Exception e) {
             e.printStackTrace();
             // TODO: log basacak.
         }
     }
-
 
     public static Runnable singleJobExecution(Job job) {
         Runnable runnable = () -> {

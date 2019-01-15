@@ -40,7 +40,7 @@ public class BREClient {
             StringBuilder content;
 
             try (BufferedReader in = new BufferedReader(
-                    new InputStreamReader(conn.getInputStream()))) {
+                new InputStreamReader(conn.getInputStream()))) {
 
                 String line;
                 content = new StringBuilder();
@@ -53,9 +53,8 @@ public class BREClient {
             return content.toString();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Rule ve relative uyusmuyor!");
         } finally {
-
             conn.disconnect();
         }
         return "";

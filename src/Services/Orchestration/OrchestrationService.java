@@ -93,7 +93,10 @@ public class OrchestrationService implements IOrchestrationService {
                         Rule rule = dbHandler.getRule(actualRuleId);
                         System.out.println("--------------> " + rule.getQuery() + " " + rule.getId() + " " + currentJob.getRelatives());
 
-                        BREClient.add(rule.getQuery(), rule.getId(), currentJob.getRelatives());   // Return value kullanilmali. Return valuesu query formattan oturu hata verebilir.
+                        int retVal = BREClient.add(rule.getQuery(), rule.getId(), currentJob.getRelatives());   // Return value kullanilmali. Return valuesu query formattan oturu hata verebilir.
+                        if (retVal == -1) {
+
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -108,64 +111,20 @@ public class OrchestrationService implements IOrchestrationService {
             }
         }
 
-//        // Saving ruleRequests to db.
-//        // creating edges between ruleRequests declared from gui.
-//        // adding DB.RuleRequest id's to the RuleIdList.
-//        for (RuleRequest temp : ruleRequests) {
-//            temp.yesEdge = JobIdList.get(temp.yesEdge);
-//            temp.noEdge = JobIdList.get(temp.noEdge);
-//            temp.relativeResults = "X";
-//            int ruleId = addRuleSub(temp);
-//            RuleIdList.add(ruleId);
-//        }
-
         // Set the start job's id.
         Orchestration actualOrch = new Orchestration(value.ownerID, StatusCodes.INITIAL, JobIdList.get(1));
 
         // Adding orchestration value to db.
+
         try {
-            actualOrch.setId(dbHandler.insertOrchestration(actualOrch));
+            int orchId = dbHandler.insertOrchestration(actualOrch);
+            actualOrch.setId(orchId);
+            for (int i = 1; i < jobList.size(); ++i)
+                dbHandler.updateJob(JobIdList.get(i), "OrchFlag", orchId);
         } catch (Exception e) {
             System.err.println("DB.OrchestrationRequest could not be introduced: " + e);
             return "*** DB.OrchestrationRequest could not be introduced. ***";
         }
-
-//        //Updating all jobRequests with their associated ruleRequests with db ids.
-//        for (int jobId : JobIdList) {
-//            if (jobId == 0) continue;
-//
-//            Job workOn;
-//            try {
-//                workOn = dbHandler.getJob(jobId);
-//            } catch (Exception e) {
-//                System.err.println("Error to access given id: " + jobId);
-//                return String.format("*** Error to access given id (job): %d***", jobId);
-//            }
-//
-//            int ruleId = RuleIdList.get(workOn.getRuleId()); // BURADA NE OLUYOR
-//            workOn.setRuleId(ruleId); // BURADA NE OLUYOR
-//            try {
-//                // Update ruleId of the job.
-//                dbHandler.updateJob(jobId, "RuleId", ruleId);
-//
-//                if (ruleId != 0) {
-//                    Rule rule = dbHandler.getRule(ruleId);
-//                    System.out.println(rule);
-//                    System.out.println("--------------> " + rule.getQuery() + " " + rule.getId() + " " + workOn.getRelatives());
-//
-//                    BREClient.add(rule.getQuery(), rule.getId(), workOn.getRelatives());   // Return value kullanilmali. Return valuesu query formattan oturu hata verebilir.
-//
-//
-//                 //   BizLog.Log("1", String.valueOf(value.ownerID), LogLevel.INFO, workOn, rule, actualOrch);
-//                }
-//
-//            } catch (Exception e) {
-//                System.err.println("Error to access given id: " + ruleId);
-//                return String.format("*** Error to access given id (rule): %d***", ruleId);
-//            }
-//
-//            //    public static void Log(String logID, String userID, LogLevel level, Job job, Rule rule, Orchestration orch)
-//        }
 
         return "DB.OrchestrationRequest has been introduced successfully!";
     }

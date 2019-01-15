@@ -561,4 +561,14 @@ public class DBHandler {
         closePreparedStatement(preparedStmt);
         closeConnection(conn);
     }
+
+    public void updateJobsSuccesfully(Orchestration orch, int statusCode) throws SQLException {
+        Connection conn = getConnection();
+        PreparedStatement preparedStmt = conn.prepareStatement("UPDATE jobs SET Status=? WHERE OrchFlag = ? AND Status!=100");
+        preparedStmt.setInt(1, statusCode);
+        preparedStmt.setInt(2, orch.getId());
+        preparedStmt.execute();
+        closePreparedStatement(preparedStmt);
+        closeConnection(conn);
+    }
 }
