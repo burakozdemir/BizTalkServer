@@ -1,11 +1,11 @@
 package MainProcess;
 
-import BizTalkLog.Logger.BizLog;
-import BizTalkLog.Logger.LogLevel;
 import DB.DBHandler;
 import DB.Job;
 import DB.Orchestration;
 import DB.Rule;
+import LOG.LogClient;
+
 import Services.StatusCodes;
 import org.apache.commons.lang3.time.StopWatch;
 
@@ -105,6 +105,7 @@ public class MainProcess {
             } else System.out.println("File tmp/file.txt doesn't exists in project root directory");
 
             System.out.println("File uploaded");
+            // tek stringli olan LOG metodu. (The file has been sent to the IP address : dest)
             ++count;
         }
 
@@ -177,19 +178,19 @@ public class MainProcess {
         }
     }
 
+
     public static Runnable singleJobExecution(Job job) {
         //DBHandler dbHandlerSingle = new DBHandler();
         Runnable runnable = () -> {
             try {
                 dbHandler.updateJob(job.getId(), "Status", StatusCodes.WORKING);//TODO ?
+                LogClient.LogJobDesc(job, "Job's status has changed from INITIAL to WORKING status.");
                 boolean canWork = true;
                 if (job.getRuleId() != 0) {
                     Rule rule = dbHandler.getRule(job.getRuleId());
                     StopWatch sw = StopWatch.createStarted();
                     char response;
                     while ((response = checkRule(rule)) == 'X' && sw.getTime(TimeUnit.SECONDS) < WAIT_TIME_SECONDS) {
-                        System.out.println("geldi" + response);
-                        System.out.println(rule.getRelativeResults());
                         Thread.sleep(100);
                     }
                     canWork = response == 'T';
@@ -200,19 +201,23 @@ public class MainProcess {
                     Rule rule = dbHandler.getRule(job.getRuleId());
                     work(job);
                     dbHandler.updateJob(job.getId(), "Status", StatusCodes.SUCCESS);
+                    LogClient.LogJobDesc(job, "Job's status has changed from INITIAL to WORKING status.");
                 } else {
                     Rule rule = dbHandler.getRule(job.getRuleId());
                     System.out.println("Not Approved job!");
                     dbHandler.updateJob(job.getId(), "Status", StatusCodes.ERROR);
+                    LogClient.LogJobDesc(job, "Job's status has changed from WORKING to ERROR status.");
                 }
             } catch (Exception e) {
                 try {
                     Rule rule = dbHandler.getRule(job.getRuleId());
                     dbHandler.updateJob(job.getId(), "Status", StatusCodes.ERROR);//TODO ?
+
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
                 e.printStackTrace();
+                LogClient.LogJobDesc(job, "Job's status has changed from WORKING to ERROR status.");
             }
         };
         return runnable;
@@ -222,8 +227,10 @@ public class MainProcess {
         return () -> {
             try {
                 dbHandler.updateOrchestration(orchestration.getId(), "Status", StatusCodes.WORKING);
+                LogClient.LogOrchDesc(orchestration, "Orchestration has just been started running.");
             } catch (Exception e) {
                 e.printStackTrace();
+                // tek stringli LOG metodu.
             }
             orchestrationRun(orchestration);
         };
@@ -238,8 +245,7 @@ public class MainProcess {
                 if (orchestrations.size() == 0) {
                     //System.out.println("No orchestrations waiting!");
                 }
-                for (Orchestration orch :
-                        orchestrations) {
+                for (Orchestration orch : orchestrations) {
                     Thread orchThread = new Thread(orchestrationExecution(orch));
                     orchThread.start();
                 }
@@ -247,8 +253,7 @@ public class MainProcess {
                 if (jobs.size() == 0) {
                     //System.out.println("No single jobs waiting!");
                 }
-                for (Job job :
-                        jobs) {
+                for (Job job : jobs) {
                     Thread jobThread = new Thread(singleJobExecution(job));
                     jobThread.start();
                 }
@@ -256,6 +261,7 @@ public class MainProcess {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+            // tek string'li LOG metodu (Server is, down!)
         }
     }
 }

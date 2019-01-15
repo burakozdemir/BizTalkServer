@@ -37,7 +37,7 @@ public interface IOrchestrationService {
     @WebMethod(action = "add_job_rule", operationName = "addJobRule")
     @WebResult(name = "message")
     String addJobRule(@WebParam(name = "job") @XmlElement(required = true) JobRequest job,
-                      @WebParam(name = "rule") RuleRequest rule);
+                      @WebParam(name = "rule") RuleRequest rule) throws Exception;
 
 
     /**

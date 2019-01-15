@@ -1,5 +1,6 @@
 package Services;
 
+import LOG.LogClient;
 import Services.Approve.ApproveService;
 import Services.InfoService.InfoService;
 import Services.Orchestration.OrchestrationService;
@@ -34,6 +35,9 @@ public class AdminService {
 
         String adminServiceAddress = "http://" + hostIp + ":9001/AdminService";
         Endpoint.publish(adminServiceAddress, this);
+
+
+        // tek stringli LOG
     }
 
     @WebMethod
@@ -42,7 +46,7 @@ public class AdminService {
             orchestrationEndpoint = Endpoint.publish(orchestrationServiceAddress, new OrchestrationService());
             infoEndpoint = Endpoint.publish(infoServiceAddress, new InfoService());
             approveEndpoint = Endpoint.publish(approveServiceAddress, new ApproveService());
-            System.out.println("----> Server has been started!");
+            // tek stringli LOG //System.out.println("----> Server has been started!");
             return "*** Server has just been started! ***";
         }
         return "*** Server is running now! ***";
@@ -54,10 +58,14 @@ public class AdminService {
             orchestrationEndpoint.stop();
             infoEndpoint.stop();
             approveEndpoint.stop();
-            System.out.println("----> Server has been stopped!");
+            // tek stringli LOG //System.out.println("----> Server has been stopped!");
             return "*** Server has just been stopped! ***";
         }
-        return "*** Server was stopped! ***";
+        else {
+            // tek stringli LOG //System.out.println("----> Server has been stopped!");
+            return "*** Server was stopped! ***";
+        }
+
     }
 
     private static String getHostIp(){

@@ -61,7 +61,7 @@ public class Rule {
         this.noEdge = noEdge;
     }
 
-    public String getRelativeResults() {
+    public String   getRelativeResults() {
         return relativeResults;
     }
 

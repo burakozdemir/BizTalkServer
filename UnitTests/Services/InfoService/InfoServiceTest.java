@@ -10,14 +10,14 @@ import java.util.ArrayList;
 import static org.junit.Assert.*;
 
 public class InfoServiceTest {
-/*
+
     @Test
     public void getJob() throws Exception {
         InfoService inf_ser = new InfoService();
         DBHandler db = new DBHandler();
 
-        Job sample = new Job(3, "job1", "destination", "file url", "111, 222, 333", 1, 1);
-        Job sample2 = new Job(4, "job2", "destination", "file url", "444, 555, 666", 1, 2);
+        Job sample = new Job(3, "job1", "destination", "file url", "111, 222, 333", 1, 1, 1);
+        Job sample2 = new Job(4, "job2", "destination", "file url", "444, 555, 666", 1, 2, 1);
 
         int id1 = db.insertJob(sample);
         int id2 = db.insertJob(sample2);
@@ -40,10 +40,10 @@ public class InfoServiceTest {
         ArrayList<String> sameOwnerJobs = new ArrayList<>();
         ArrayList<JobResponse> retVal = new ArrayList<>();
 
-        Job sample = new Job(1, "job1", "destination", "file url", "111, 222, 333", 1, 1);
-        Job sample2 = new Job(2, "job2", "destination", "file url", "444, 555, 666", 1, 2);
-        Job sample3 = new Job(1, "job3", "destination", "file url", "777, 888, 999", 1, 3);
-        Job sample4 = new Job(1, "job4", "destination", "file url", "1111, 2222, 3333", 1, 4);
+        Job sample = new Job(1, "job1", "destination", "file url", "111, 222, 333", 1, 1, 1);
+        Job sample2 = new Job(2, "job2", "destination", "file url", "444, 555, 666", 1, 2, 1);
+        Job sample3 = new Job(1, "job3", "destination", "file url", "777, 888, 999", 1, 3, 1);
+        Job sample4 = new Job(1, "job4", "destination", "file url", "1111, 2222, 3333", 1, 4, 1);
 
         int id1 = db.insertJob(sample);
         int id2 = db.insertJob(sample2);
@@ -115,10 +115,10 @@ public class InfoServiceTest {
         ArrayList<JobResponse> retVal;
         ArrayList<JobResponse> checkList = new ArrayList<>();
 
-        Job sample = new Job(1, "job1", "destination", "file url", "111, 222, 333", 1, 1);
-        Job sample2 = new Job(2, "job2", "destination", "file url", "444, 555, 666", 1, 2);
-        Job sample3 = new Job(1, "job3", "destination", "file url", "777, 888, 999", 1, 3);
-        Job sample4 = new Job(1, "job4", "destination", "file url", "111, 2222, 3333", 1, 4);
+        Job sample = new Job(1, "job1", "destination", "file url", "111, 222, 333", 1, 1, 1);
+        Job sample2 = new Job(2, "job2", "destination", "file url", "444, 555, 666", 1, 2, 1);
+        Job sample3 = new Job(1, "job3", "destination", "file url", "777, 888, 999", 1, 3, 1);
+        Job sample4 = new Job(1, "job4", "destination", "file url", "111, 2222, 3333", 1, 4, 1);
 
         int id1 = db.insertJob(sample);
         int id2 = db.insertJob(sample2);
@@ -130,8 +130,8 @@ public class InfoServiceTest {
         sample3.setId(id3);
         sample4.setId(id4);
 
-        checkList.add(new JobResponse(id1, 1, "job1", "destination", "file url", "111, 222, 333", 1, 1,sample.getInsertDateTime_Date(), sample.getUpdateDateTime_Date()));
-        checkList.add(new JobResponse(id4, 1, "job4", "destination", "file url", "111, 2222, 3333", 1, 4,sample.getInsertDateTime_Date(), sample.getUpdateDateTime_Date()));
+        checkList.add(new JobResponse(id1, 1, "job1", "destination", "file url", "111, 222, 333", 1, 1,sample.getInsertDateTime_Date(), sample.getUpdateDateTime_Date(), 1));
+        checkList.add(new JobResponse(id4, 1, "job4", "destination", "file url", "111, 2222, 3333", 1, 4,sample.getInsertDateTime_Date(), sample.getUpdateDateTime_Date(), 1));
 
         retVal = inf_ser.getJobsFromRelative(111);
 
@@ -140,5 +140,5 @@ public class InfoServiceTest {
         }
 
     }
-    */
+
 }

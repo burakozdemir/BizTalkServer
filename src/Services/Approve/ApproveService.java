@@ -3,6 +3,8 @@ package Services.Approve;
 import BRE.BREClient;
 import DB.DBHandler;
 import DB.Job;
+import DB.Rule;
+import LOG.LogClient;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -40,9 +42,13 @@ public class ApproveService {
 
     //En son olarak rule tablosunu guncelledim.
     try {
+      Rule oldRule = db.getRule(ruleId);
       db.updateRule(ruleId,"RelativeResult",newRelative);
+      Rule newRule = db.getRule(ruleId);
+      LogClient.LogRuleUpdate(oldRule, newRule);
     } catch (Exception e) {
       e.printStackTrace();
+      // rule guncellenemezse gelecek olan String parametreli method
     }
     System.out.println(ra.getRelativeId() + ra.getUserApprove());
     return "update relative";

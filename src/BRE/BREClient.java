@@ -22,7 +22,7 @@ public class BREClient {
 
     private static HttpURLConnection conn;
 
-    private static String request(String url, String urlParameters) {
+    public static String request(String url, String urlParameters) {
         byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
 
         try {
