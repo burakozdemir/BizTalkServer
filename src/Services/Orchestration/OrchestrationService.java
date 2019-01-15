@@ -8,6 +8,7 @@ import DB.Job;
 import DB.Orchestration;
 import DB.Rule;
 import LOG.LogClient;
+import LOG.LogLevel;
 import Services.Orchestration.Requests.JobRequest;
 import Services.Orchestration.Requests.OrchestrationRequest;
 import Services.Orchestration.Requests.RuleRequest;
@@ -50,7 +51,7 @@ public class OrchestrationService implements IOrchestrationService {
         JobIdList.add(0);
         RuleIdList.add(0);
 
-        //Saving jobRequests to the database
+        // Saving jobRequests to the database
         // and adding their generated id's from db to JobIdList.
         for (JobRequest temp : jobRequests){
             int id = addJobSub(temp);
@@ -145,7 +146,7 @@ public class OrchestrationService implements IOrchestrationService {
             System.out.println("addJobRule" + job.id + " Hata burada");
             int newJobId = addJobSub(job);
             if (newJobId != -1) {
-                LogClient.LogJobDesc(dbHandler.getJob(newJobId), "Job added without a rule.");
+                LogClient.LogJobDesc(dbHandler.getJob(newJobId), "Job added without a rule.", LogLevel.ERROR);
                 return "Job has been added successfully!";
             }
             else {
@@ -159,7 +160,7 @@ public class OrchestrationService implements IOrchestrationService {
         int ruleId = addJobSub(job);
         BREClient.add(rule.query, ruleId, job.relatives);   // Return value kullanilmali. Return valuesu query formattan oturu hata verebilir.
         if (ruleId != -1) {
-            LogClient.LogJobRule(dbHandler.getJob(ruleId), dbHandler.getRule(job.ruleId));
+            LogClient.LogJobRule(dbHandler.getJob(ruleId), dbHandler.getRule(job.ruleId), LogLevel.INFO);
             return "Job has been added with rule successfully!";
         }
         else {
@@ -179,16 +180,16 @@ public class OrchestrationService implements IOrchestrationService {
         try {
             Job job = dbHandler.getJob(jobID);
             if (job.getStatus() == StatusCodes.REMOVED) {
-                LogClient.LogJobDesc(job, "Job has already been removed!");
+                LogClient.LogJobDesc(job, "Job has already been removed!", LogLevel.ERROR);
                 return "Job has already been removed!";
             }
             int ruleId = job.getRuleId();
             if (ruleId != 0) {
-                LogClient.LogJobRule(job, dbHandler.getRule(ruleId));
+                LogClient.LogJobRule(job, dbHandler.getRule(ruleId), LogLevel.INFO);
                 dbHandler.removeRule(ruleId);
             }
             else {
-                LogClient.LogJobDesc(job, "Job has been removed without its rule.");
+                LogClient.LogJobDesc(job, "Job has been removed without its rule.", LogLevel.ERROR);
             }
             dbHandler.updateJob(jobID, "Status", StatusCodes.REMOVED);
         } catch (Exception e) {

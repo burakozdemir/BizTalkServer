@@ -4,6 +4,7 @@ import DB.DBHandler;
 import DB.Job;
 import DB.Orchestration;
 import LOG.LogClient;
+import LOG.LogLevel;
 import MainProcess.MainProcess;
 import Services.Approve.ApproveService;
 import Services.InfoService.InfoService;
@@ -33,15 +34,23 @@ public class AdminService {
         String hostIp = getHostIp();
         orchestrationServiceAddress = "http://" + hostIp + ":9001/OrchestrationService";
         orchestrationEndpoint = Endpoint.publish(orchestrationServiceAddress, new OrchestrationService());
+        LogClient.LogDesc("Orchestration webservice has been started.", -1, LogLevel.INFO);
+
 
         infoServiceAddress = "http://" + hostIp + ":9001/InfoService";
         infoEndpoint = Endpoint.publish(infoServiceAddress, new InfoService());
+        LogClient.LogDesc("Infoservice webservice has been started.", -1, LogLevel.INFO);
+
 
         approveServiceAddress = "http://" + hostIp + ":9001/ApproveService";
         approveEndpoint = Endpoint.publish(approveServiceAddress, new ApproveService());
+        LogClient.LogDesc("Approveservice webservice has been started.", -1, LogLevel.INFO);
+
 
         String adminServiceAddress = "http://" + hostIp + ":9001/AdminService";
         Endpoint.publish(adminServiceAddress, this);
+        LogClient.LogDesc("Adminservice webservice has been started.", -1, LogLevel.INFO);
+
 
         stopped = false;
 
@@ -56,6 +65,7 @@ public class AdminService {
             orchestrationEndpoint = Endpoint.publish(orchestrationServiceAddress, new OrchestrationService());
             infoEndpoint = Endpoint.publish(infoServiceAddress, new InfoService());
             approveEndpoint = Endpoint.publish(approveServiceAddress, new ApproveService());
+            LogClient.LogDesc("Server has just been started", -1, LogLevel.INFO);
             // tek stringli LOG //System.out.println("----> Server has been started!");
             return "*** Server has just been started! ***";
         }
@@ -71,10 +81,12 @@ public class AdminService {
             orchestrationEndpoint.stop();
             infoEndpoint.stop();
             approveEndpoint.stop();
+            LogClient.LogDesc("Server has just been stopped", -1, LogLevel.INFO);
             // tek stringli LOG //System.out.println("----> Server has been stopped!");
             return "*** Server has just been stopped! ***";
         }
         else {
+            LogClient.LogDesc("Server has just been stopped",-1, LogLevel.INFO);
             // tek stringli LOG //System.out.println("----> Server has been stopped!");
             return "*** Server was stopped! ***";
         }

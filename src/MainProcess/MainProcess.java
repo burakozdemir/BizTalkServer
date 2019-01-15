@@ -6,6 +6,7 @@ import DB.Orchestration;
 import DB.Rule;
 import LOG.LogClient;
 
+import LOG.LogLevel;
 import Services.AdminService;
 import Services.StatusCodes;
 import org.apache.commons.lang3.time.StopWatch;
@@ -106,6 +107,7 @@ public class MainProcess {
 
             System.out.println("File uploaded");
             // tek stringli olan LOG metodu. (The file has been sent to the IP address : dest)
+            LogClient.LogDesc("The file has been sent to the asked IP address.", job.getOwner(), LogLevel.INFO);
             ++count;
         }
 
@@ -180,13 +182,17 @@ public class MainProcess {
             if (noRuleState) {
                 work(currentJob);
                 dbHandler.updateJob(currentJobID, "Status", StatusCodes.SUCCESS);
+                LogClient.LogDesc("The rule has changed its status from WORKING to SUCCESS.", currentJobID, LogLevel.UPDATE);
+
             }
 
             dbHandler.updateOrchestration(orchestration.getId(), "Status", StatusCodes.SUCCESS);
             dbHandler.updateJobsSuccesfully(orchestration, StatusCodes.SUCCESS);
+            LogClient.LogOrchDesc(orchestration, "The orchestration has been completed successfully.", LogLevel.UPDATE);
             orchList.remove(orchestration);
         } catch (Exception e) {
             e.printStackTrace();
+            LogClient.LogDesc("Orchestration couldn't be completed successfully.", -1, LogLevel.ERROR);
         }
     }
 
@@ -194,7 +200,7 @@ public class MainProcess {
         Runnable runnable = () -> {
             try {
                 dbHandler.updateJob(job.getId(), "Status", StatusCodes.WORKING);//TODO ?
-                LogClient.LogJobDesc(job, "Job's status has changed from INITIAL to WORKING status.");
+                LogClient.LogJobDesc(job, "Job's status has changed from INITIAL to WORKING status.", LogLevel.UPDATE);
                 boolean canWork = true;
                 if (job.getRuleId() != 0) {
                     Rule rule = dbHandler.getRule(job.getRuleId());
@@ -211,12 +217,12 @@ public class MainProcess {
                     work(job);
                     dbHandler.updateJob(job.getId(), "Status", StatusCodes.SUCCESS);
                     jobList.remove(job.getId());
-                    LogClient.LogJobDesc(job, "Job's status has changed from INITIAL to WORKING status.");
+                    LogClient.LogJobDesc(job, "Job's status has changed from INITIAL to WORKING status.", LogLevel.UPDATE);
                 } else {
                     System.out.println("Not Approved job!");
                     dbHandler.updateJob(job.getId(), "Status", StatusCodes.ERROR);
                     jobList.remove(job.getId());
-                    LogClient.LogJobDesc(job, "Job's status has changed from WORKING to ERROR status.");
+                    LogClient.LogJobDesc(job, "Job's status has changed from WORKING to ERROR status.", LogLevel.UPDATE);
                 }
             } catch (Exception e) {
                 try {
@@ -226,7 +232,7 @@ public class MainProcess {
                     e1.printStackTrace();
                 }
                 e.printStackTrace();
-                LogClient.LogJobDesc(job, "Job's status has changed from WORKING to ERROR status.");
+                LogClient.LogJobDesc(job, "Job's status has changed from WORKING to ERROR status.", LogLevel.UPDATE);
             }
         };
         return runnable;
@@ -236,9 +242,11 @@ public class MainProcess {
         return () -> {
             try {
                 dbHandler.updateOrchestration(orchestration.getId(), "Status", StatusCodes.WORKING);
-                LogClient.LogOrchDesc(orchestration, "Orchestration has just been started running.");
+                LogClient.LogOrchDesc(orchestration, "Orchestration has just been started running.", LogLevel.INFO);
             } catch (Exception e) {
                 e.printStackTrace();
+                LogClient.LogDesc("Orchestration couldn't be started for some reason.", orchestration.getOwnerID(), LogLevel.ERROR);
+
                 // tek stringli LOG metodu.
             }
             orchestrationRun(orchestration);
@@ -246,7 +254,7 @@ public class MainProcess {
     }
 
     public static void main(String[] args) throws Exception {
-        Publish.main(null);
+        new AdminService();
 
         try {
             while (true) {
@@ -274,7 +282,7 @@ public class MainProcess {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            // tek string'li LOG metodu (Server is, down!)
+            LogClient.LogDesc("Server is, down.", -1, LogLevel.FAIL);
         }
     }
 }

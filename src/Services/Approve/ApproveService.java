@@ -5,10 +5,12 @@ import DB.DBHandler;
 import DB.Job;
 import DB.Rule;
 import LOG.LogClient;
+import LOG.LogLevel;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.xml.bind.annotation.XmlElement;
+import java.awt.image.Kernel;
 
 @WebService()
 public class ApproveService {
@@ -17,7 +19,7 @@ public class ApproveService {
 
 
   @WebMethod()
-  public String updateUserApprove(@XmlElement(required = true, nillable = false) requestApprove ra){
+  public String updateUserApprove(@XmlElement(required = true, nillable = false) requestApprove ra) throws Exception {
     System.out.println("Approve geldi");
     //guiden gelen degerler.
     userApp = ra.getUserApprove();
@@ -41,13 +43,14 @@ public class ApproveService {
     }else newRelative = "T";
 
     //En son olarak rule tablosunu guncelledim.
+    Rule oldRule = db.getRule(ruleId);
     try {
-      Rule oldRule = db.getRule(ruleId);
       db.updateRule(ruleId,"RelativeResult",newRelative);
       Rule newRule = db.getRule(ruleId);
       LogClient.LogRuleUpdate(oldRule, newRule);
     } catch (Exception e) {
       e.printStackTrace();
+      LogClient.LogDesc("The rule couldn't be updated for some reason.", oldRule.getOwnerID(), LogLevel.ERROR);
       // rule guncellenemezse gelecek olan String parametreli method
     }
     System.out.println(ra.getRelativeId() + ra.getUserApprove());

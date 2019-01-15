@@ -1,5 +1,8 @@
 package BRE;
 
+import LOG.LogClient;
+import LOG.LogLevel;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -54,6 +57,7 @@ public class BREClient {
 
         } catch (IOException e) {
             System.out.println("Rule ve relative uyusmuyor!");
+            LogClient.LogDesc("Relatives don't have correct rule format", -1, LogLevel.ERROR);
         } finally {
             conn.disconnect();
         }
