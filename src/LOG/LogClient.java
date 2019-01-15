@@ -19,9 +19,11 @@ public class LogClient {
             = "http://localhost:4000/orchdesc";
     private static final String logOrchUrl
             = "http://localhost:4000/orch";
+    private static final String logDescUrl
+            = "http://localhost:4000/onlydesc";
 
     private static String jobDescParam =
-                    "<job>\n" +
+            "<job>\n" +
                     "    <id>%d</id>\n" +
                     "    <owner_id>%d</owner_id>\n" +
                     "    <job_description>%s</job_description>\n" +
@@ -35,7 +37,7 @@ public class LogClient {
                     "    <description>%s</description>\n" +
                     "</job>\n";
     private static String ruleUpdateParam =
-                    "<rules>\n" +
+            "<rules>\n" +
                     "<rule>\n" +
                     "<id>%d</id>\n" +
                     "    <owner_id>%d</owner_id>\n" +
@@ -56,28 +58,28 @@ public class LogClient {
 
 
     private static String jobRuleParam =
-                "<jobrule>\n" +
-                        "<job>\n" +
-                        "    <id>%d</id>\n" +
-                        "    <owner_id>%d</owner_id>\n" +
-                        "    <job_description>%s</job_description>\n" +
-                        "    <destination>%s</destination>\n" +
-                        "    <file_url>%s</file_url>\n" +
-                        "    <relatives>%s</relatives>\n" +
-                        "    <status>%d</status>\n" +
-                        "    <rule_id>%d</rule_id>\n" +
-                        "    <insert_time>%s</insert_time>\n" +
-                        "    <update_time>%s</update_time>\n" +
-                        "</job>\n"+
-                        "<rule>\n" +
-                        "    <id>%d</id>\n" +
-                        "    <owner_id>%d</owner_id>\n" +
-                        "    <query>%s</query>\n" +
-                        "    <yes_edge>%d</yes_edge>\n" +
-                        "    <no_edge>%d</no_edge>\n" +
-                        "    <relative_results>%s</relative_results>\n" +
-                        "</rule>\n"
-                        +"</jobrule>\n";
+            "<jobrule>\n" +
+                    "<job>\n" +
+                    "    <id>%d</id>\n" +
+                    "    <owner_id>%d</owner_id>\n" +
+                    "    <job_description>%s</job_description>\n" +
+                    "    <destination>%s</destination>\n" +
+                    "    <file_url>%s</file_url>\n" +
+                    "    <relatives>%s</relatives>\n" +
+                    "    <status>%d</status>\n" +
+                    "    <rule_id>%d</rule_id>\n" +
+                    "    <insert_time>%s</insert_time>\n" +
+                    "    <update_time>%s</update_time>\n" +
+                    "</job>\n"+
+                    "<rule>\n" +
+                    "    <id>%d</id>\n" +
+                    "    <owner_id>%d</owner_id>\n" +
+                    "    <query>%s</query>\n" +
+                    "    <yes_edge>%d</yes_edge>\n" +
+                    "    <no_edge>%d</no_edge>\n" +
+                    "    <relative_results>%s</relative_results>\n" +
+                    "</rule>\n"
+                    +"</jobrule>\n";
 
     private static String orchDescParam =
             "<orchestration>\n" +
@@ -91,20 +93,51 @@ public class LogClient {
                     "</orchestration>\n";
 
     private static String orchParam =
-            "<orchestration>\n" +
+            "<start>\n"+
+                    "<orchestration>\n" +
                     "    <id>%d</id>\n" +
                     "    <owner_id>%d</owner_id>\n" +
                     "    <status>%d</status>\n" +
                     "    <start_job_id>%d</start_job_id>\n" +
                     "    <insert_time>%s</insert_time>\n" +
                     "    <update_time>%s</update_time>\n" +
-                    "    <job_list>%s</job_list>\n" +
-                    "    <rule_list>%s</rule_list>\n" +
-                    "</orchestration>\n";
+                    "</orchestration>\n"+
+                    "<jobs>\n%s</jobs>\n"+
+                    "<rules>\n%s</rules>\n"+
+                    "</start>";
+
+
+    private static String descParam =
+            "<description>\n" +
+                    "    <id>%d</id>\n" +
+                    "    <desc>%s</desc>\n" +
+                    "</description>\n";
+
+    private static String jobParam =
+            "<job>\n" +
+                    "    <id>%d</id>\n" +
+                    "    <owner_id>%d</owner_id>\n" +
+                    "    <job_description>%s</job_description>\n" +
+                    "    <destination>%s</destination>\n" +
+                    "    <file_url>%s</file_url>\n" +
+                    "    <relatives>%s</relatives>\n" +
+                    "    <status>%d</status>\n" +
+                    "    <rule_id>%d</rule_id>\n" +
+                    "    <insert_time>%s</insert_time>\n" +
+                    "    <update_time>%s</update_time>\n" +
+                    "</job>\n";
+
+    private static String ruleParam =
+            "<rule>\n" +
+                    "    <id>%d</id>\n" +
+                    "    <owner_id>%d</owner_id>\n" +
+                    "    <query>%s</query>\n" +
+                    "    <yes_edge>%d</yes_edge>\n" +
+                    "    <no_edge>%d</no_edge>\n" +
+                    "    <relative_results>%s</relative_results>\n" +
+                    "</rule>\n";
 
     private static HttpURLConnection conn;
-
-
 
     public static void LogRuleUpdate(Rule oldRule,Rule newRule) {
         String response = BREClient.request(logRuleUpdateUrl,  String.format(ruleUpdateParam , oldRule.getId(),oldRule.getOwnerID(),oldRule.getQuery(),
@@ -113,7 +146,6 @@ public class LogClient {
         response = response.toLowerCase();
         System.out.println(response);
     }
-
 
     public static void LogJobRule(Job job, Rule rule) {
         String response;
@@ -132,7 +164,6 @@ public class LogClient {
         response = response.toLowerCase();
         System.out.println(response);
     }
-
 
     public static void LogJobDesc(Job job, String description) {
         String response = BREClient.request(logJobDescUrl,
@@ -157,12 +188,32 @@ public class LogClient {
     }
 
     public static void LogOrch(OrchestrationCapsule orchestration) {
-        String response = BREClient.request(logOrchUrl,
-                String.format(orchParam ,
-                        orchestration.getId(), orchestration.getOwnerID(), orchestration.getStatus(),
-                        orchestration.getStartJobID(), orchestration.getInsertDateTime(),
-                        orchestration.getUpdateDateTime(),
-                        orchestration.getJobs().toString(), orchestration.getRules().toString()));
+        String jobFormat = "";
+        for(Job job : orchestration.getJobs()){
+            jobFormat += String.format(jobParam,job.getId(), job.getOwner(), job.getDescription(), job.getDestination(),
+                    job.getFileUrl(), job.getRelatives(), job.getStatus(), job.getRuleId(),
+                    job.getInsertDateTime(), job.getUpdateDateTime());
+        }
+
+        String ruleFormat = "";
+        for(Rule rule : orchestration.getRules()){
+            ruleFormat += String.format(ruleParam,rule.getId(),rule.getOwnerID(),rule.getQuery(),
+                    rule.getYesEdge(),rule.getNoEdge(),rule.getRelativeResults());
+        }
+        String format = String.format(orchParam,orchestration.getId(), orchestration.getOwnerID(), orchestration.getStatus(),
+                orchestration.getStartJobID(), orchestration.getInsertDateTime(),
+                orchestration.getUpdateDateTime(),jobFormat,ruleFormat);
+        String response = BREClient.request(logOrchUrl,format);
+        System.out.println(format);
+        response = response.toLowerCase();
+
+        System.out.println(response);
+    }
+
+    public static void LogDesc(String description,int user_id) {
+        String response = BREClient.request(logDescUrl,
+                String.format(descParam,
+                        user_id,description));
         response = response.toLowerCase();
 
         System.out.println(response);
