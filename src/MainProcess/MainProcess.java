@@ -179,7 +179,6 @@ public class MainProcess {
 
 
     public static Runnable singleJobExecution(Job job) {
-        //DBHandler dbHandlerSingle = new DBHandler();
         Runnable runnable = () -> {
             try {
                 dbHandler.updateJob(job.getId(), "Status", StatusCodes.WORKING);//TODO ?

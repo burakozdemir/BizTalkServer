@@ -15,10 +15,10 @@ public class OrchestrationCapsule {
     private int startJobID;
     private Date InsertDateTime;
     private Date UpdateDateTime;
-    private ArrayList<JobRequest> jobs;
-    private ArrayList<RuleRequest> rules;
+    private ArrayList<Job> jobs;
+    private ArrayList<Rule> rules;
 
-    public OrchestrationCapsule(int id, int ownerID, int status, int startJobID, Date InsertDataTime, Date UpdateDateTime, ArrayList<JobRequest> jobs, ArrayList<RuleRequest> rules) {
+    public OrchestrationCapsule(int id, int ownerID, int status, int startJobID, Date InsertDataTime, Date UpdateDateTime, ArrayList<Job> jobs, ArrayList<Rule> rules) {
         this.id = id;
         this.ownerID = ownerID;
         this.status = status;
@@ -57,11 +57,11 @@ public class OrchestrationCapsule {
         return UpdateDateTime;
     }
 
-    public ArrayList<JobRequest> getJobs() {
+    public ArrayList<Job> getJobs() {
         return jobs;
     }
 
-    public ArrayList<RuleRequest> getRules() {
+    public ArrayList<Rule> getRules() {
         return rules;
     }
 
@@ -89,11 +89,11 @@ public class OrchestrationCapsule {
         this.UpdateDateTime = UpdateDateTime;
     }
 
-    public void setJobs(ArrayList<JobRequest> jobs) {
+    public void setJobs(ArrayList<Job> jobs) {
         this.jobs = jobs;
     }
 
-    public void setRules(ArrayList<RuleRequest> rules) {
+    public void setRules(ArrayList<Rule> rules) {
         this.rules = rules;
     }
 }
