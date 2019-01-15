@@ -174,7 +174,6 @@ public class MainProcess {
         } catch (Exception e) {
             e.printStackTrace();
             // TODO: log basacak.
-            //System.out.println(String.format("*** An error occured while getting orchestration from DB: %s ***", e));
         }
     }
 
