@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class MainProcess {
-    private final static int WAIT_TIME_SECONDS = 300;
+    private final static int WAIT_TIME_MILLISECONDS = 5 * 60 * 1000;
     private static DBHandler dbHandler = new DBHandler();
     public static ArrayList<Orchestration> orchList = new ArrayList<>();
     public static ArrayList<Job> jobList = new ArrayList<>();
@@ -137,13 +137,10 @@ public class MainProcess {
             while (currentJob.getRuleId() != 0) {
                 Rule ruleOfCurrentJob = dbHandler.getRule(currentJob.getRuleId());
                 char responseOfBRE;
-
-                StopWatch sw = StopWatch.createStarted();
-                while ((responseOfBRE = checkRule(ruleOfCurrentJob)) == 'X' && sw.getTime(TimeUnit.SECONDS) < WAIT_TIME_SECONDS) {
+                Date jobInsertDate = currentJob.getInsertDateTime_Date();
+                while ((responseOfBRE = checkRule(ruleOfCurrentJob)) == 'X' && (new Date()).getTime() - jobInsertDate.getTime() < WAIT_TIME_MILLISECONDS) {
                     Thread.sleep(100); // Check every 100 ms
                 }
-
-                sw.stop();
 
                 if (responseOfBRE == 'T') {
                     System.out.println("Response True geldi -> JobId: " + currentJob.getId());
@@ -204,9 +201,9 @@ public class MainProcess {
                 boolean canWork = true;
                 if (job.getRuleId() != 0) {
                     Rule rule = dbHandler.getRule(job.getRuleId());
-                    StopWatch sw = StopWatch.createStarted();
+                    Date jobInsertDate = job.getInsertDateTime_Date();
                     char response;
-                    while ((response = checkRule(rule)) == 'X' && sw.getTime(TimeUnit.SECONDS) < WAIT_TIME_SECONDS) {
+                    while ((response = checkRule(rule)) == 'X' && (new Date()).getTime() - jobInsertDate.getTime() < WAIT_TIME_MILLISECONDS) {
                         Thread.sleep(100);
                     }
                     canWork = response == 'T';
