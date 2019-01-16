@@ -8,6 +8,7 @@ import Services.InfoService.OrchestrationCapsule;
 import Services.Orchestration.Requests.JobRequest;
 
 import java.net.HttpURLConnection;
+import java.text.SimpleDateFormat;
 
 public class LogClient {
     private static final String logJobDescUrl
@@ -22,6 +23,9 @@ public class LogClient {
             = "http://localhost:4000/orch";
     private static final String logDescUrl
             = "http://localhost:4000/onlydesc";
+
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 
     private static String jobDescParam =
             "<job>\n" +
@@ -214,8 +218,8 @@ public class LogClient {
                     rule.getYesEdge(),rule.getNoEdge(),rule.getRelativeResults(),level.name());
         }
         String format = String.format(orchParam,orchestration.getId(), orchestration.getOwnerID(), orchestration.getStatus(),
-                orchestration.getStartJobID(), orchestration.getInsertDateTime(),
-                orchestration.getUpdateDateTime(),jobFormat,ruleFormat,level.name());
+                orchestration.getStartJobID(), dateFormat.format(orchestration.getInsertDateTime()),
+                dateFormat.format(orchestration.getUpdateDateTime()),jobFormat,ruleFormat,level.name());
         String response = BREClient.request(logOrchUrl,format);
         System.out.println(format);
         response = response.toLowerCase();

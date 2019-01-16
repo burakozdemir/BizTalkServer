@@ -1,5 +1,6 @@
 package DB;
 
+import Services.InfoService.OrchestrationCapsule;
 import Services.InfoService.RulesAndJobs;
 import com.mysql.jdbc.JDBC4PreparedStatement;
 
@@ -15,7 +16,7 @@ public class DBHandler {
 
     //private String dbUrl = "jdbc:mysql://localhost:3306/biztalk?useUnicode=true&characterEncoding=utf-8";
     //< private String dbUrl = "jdbc:mysql://51.158.72.164:3306/biztalk?useUnicode=true&characterEncoding=utf-8&useSSL=false";
-    String dbUrl = "jdbc:mysql://localhost:3306/biztalkdb";
+    String dbUrl = "jdbc:mysql://10.1.90.19:3306/biztalkdb";
     private String userName = "root";
     //private String password = "dd6dfe6b993b05f305b8ac3d6773cebd7bd7af9f";
 
@@ -527,6 +528,45 @@ public class DBHandler {
         orchestration.setUpdateDateTime(rs.getString("UpdateDateTime"));
     }
 
+    public OrchestrationCapsule getOrchestrationById(Orchestration orchestration) throws Exception {
+        Connection conn = getConnection();
+        PreparedStatement preparedStmt = conn.prepareStatement("SELECT * FROM jobs WHERE OrchFlag = ?");
+        preparedStmt.setInt(1, orchestration.getId());
+        ResultSet rs = preparedStmt.executeQuery();
+        OrchestrationCapsule orchestrationCapsule = new OrchestrationCapsule();
+        ArrayList<Job> jobList = new ArrayList<>();
+        ArrayList<Rule> ruleList = new ArrayList<>();
+
+        while (rs.next()) {
+            Job job = new Job();
+
+            // Create Job
+            job.setId(rs.getInt("JobId"));
+            job.setOwner(rs.getInt("JobOwner"));
+            job.setDescription(rs.getString("Description"));
+            job.setDestination(rs.getString("Destination"));
+            job.setFileUrl(rs.getString("FileUrl"));
+            job.setRelatives(rs.getString("Relatives"));
+            job.setStatus(rs.getInt("Status"));
+            job.setRuleId(rs.getInt("RuleId"));
+            job.setInsertDateTime(rs.getString("InsertDateTime"));
+            job.setUpdateDateTime(rs.getString("UpdateDateTime"));
+            job.setOrchFlag(rs.getInt("OrchFlag"));
+            jobList.add(job);
+
+            ruleList.add(this.getRule(job.getRuleId()));
+        }
+        orchestrationCapsule.setId(orchestration.getId());
+        orchestrationCapsule.setOwnerID(orchestration.getOwnerID());
+        orchestrationCapsule.setStatus(orchestration.getStatus());
+        orchestrationCapsule.setStartJobID(orchestration.getStartJobID());
+        orchestrationCapsule.setInsertDateTime(orchestration.getInsertDateTime_Date());
+        orchestrationCapsule.setUpdateDateTime(orchestration.getUpdateDateTime_Date());
+        orchestrationCapsule.setJobs(jobList);
+        orchestrationCapsule.setRules(ruleList);
+
+        return orchestrationCapsule;
+    }
 
     public ArrayList<Job> getUnorchestrainedJobs() throws Exception {
         Connection conn = getConnection();
@@ -562,11 +602,11 @@ public class DBHandler {
         closeConnection(conn);
     }
 
-    public void updateJobsSuccesfully(Orchestration orch, int statusCode) throws SQLException {
+    public void updateJobsSuccesfully(int orchId, int statusCode) throws SQLException {
         Connection conn = getConnection();
         PreparedStatement preparedStmt = conn.prepareStatement("UPDATE jobs SET Status=? WHERE OrchFlag = ? AND Status!=100");
         preparedStmt.setInt(1, statusCode);
-        preparedStmt.setInt(2, orch.getId());
+        preparedStmt.setInt(2, orchId);
         preparedStmt.execute();
         closePreparedStatement(preparedStmt);
         closeConnection(conn);

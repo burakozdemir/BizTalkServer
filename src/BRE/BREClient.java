@@ -39,7 +39,6 @@ public class BREClient {
             try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
                 wr.write(postData);
             }
-
             StringBuilder content;
 
             try (BufferedReader in = new BufferedReader(
@@ -57,7 +56,7 @@ public class BREClient {
 
         } catch (IOException e) {
             System.out.println("Rule ve relative uyusmuyor!");
-            LogClient.LogDesc("Relatives don't have correct rule format", -1, LogLevel.ERROR);
+            LogClient.LogDesc("Relatives don't have correct rule format.", -1, LogLevel.FAIL);
         } finally {
             conn.disconnect();
         }
@@ -72,13 +71,11 @@ public class BREClient {
         if (response.contains("T")) {
             return 1;
         }
-
         return -1;
     }
 
     public static String approve(int ruleID, int relativeID, String answer) {
         String response = request(answerUrl, String.format(answerParameters, relativeID, ruleID, answer));
-        System.out.println("response from bre" + response);
         return response;
     }
 }
