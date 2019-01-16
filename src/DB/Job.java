@@ -1,5 +1,6 @@
 package DB;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,7 +21,8 @@ public class Job {
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public Job(){
-
+        this.insertDateTime = new Date();
+        this.updateDateTime = new Date();
     }
 
     public Job(int owner,String description,String destination,String fileUrl,
@@ -110,6 +112,16 @@ public class Job {
     public void setInsertDateTime(String time) throws ParseException {
 
         this.insertDateTime = this.dateFormat.parse(time);
+    }
+
+    public String getInsertDateString(){
+        Timestamp timestamp = new Timestamp(insertDateTime.getYear(),insertDateTime.getMonth(),insertDateTime.getDate(),insertDateTime.getHours(),insertDateTime.getMinutes(),insertDateTime.getSeconds(),0);
+        return timestamp.toString();
+    }
+
+    public String getUpdateDateString(){
+        Timestamp timestamp = new Timestamp(updateDateTime.getYear(),updateDateTime.getMonth(),updateDateTime.getDate(),updateDateTime.getHours(),updateDateTime.getMinutes(),updateDateTime.getSeconds(),0);
+        return timestamp.toString();
     }
 
     public String getUpdateDateTime() {

@@ -66,50 +66,50 @@ public class OrchestrationService implements IOrchestrationService {
         List<RuleRequest> mockRuleReq = new ArrayList<>();
         for (int i = 0; i < jobList.size(); i++){
             Job currentJob = jobList.get(i);
-            if (i < jobList.size() - 1){
-                int actualRuleId;
-                if (currentJob.getRuleId() == 0){
-                    int jobId = i + 1 ;
-                    RuleRequest mockRequest = new RuleRequest();
-                    mockRequest.id = jobId;
-                    mockRequest.noEdge = 0;
-                    mockRequest.yesEdge = JobIdList.get(jobRequests.get(jobId - 1).nextJobId);
-                    mockRequest.relativeResults = "T";
-                    mockRequest.ownerID = currentJob.getOwner();
-                    mockRequest.query = "";
-                    actualRuleId = addRuleSub(mockRequest);
-                    RuleIdList.add(actualRuleId);
-                    mockRequest.id = actualRuleId;
 
-                    mockRuleReq.add(mockRequest);
-                }
-                else {
-                    RuleRequest temp = ruleRequests.get(currentJob.getRuleId() - 1);
-                    temp.yesEdge = JobIdList.get(temp.yesEdge);
-                    temp.noEdge = JobIdList.get(temp.noEdge);
-                    temp.relativeResults = "X";
-                    actualRuleId = addRuleSub(temp);
-                    RuleIdList.add(actualRuleId);
-                    try {
-                        Rule rule = dbHandler.getRule(actualRuleId);
-                        System.out.println("--------------> " + rule.getQuery() + " " + rule.getId() + " " + currentJob.getRelatives());
+            int actualRuleId;
+            if (currentJob.getRuleId() == 0){
+                int jobId = i + 1 ;
+                RuleRequest mockRequest = new RuleRequest();
+                mockRequest.id = jobId;
+                mockRequest.noEdge = 0;
+                mockRequest.yesEdge = JobIdList.get(jobRequests.get(jobId - 1).nextJobId);
+                mockRequest.relativeResults = "T";
+                mockRequest.ownerID = currentJob.getOwner();
+                mockRequest.query = "";
+                actualRuleId = addRuleSub(mockRequest);
+                RuleIdList.add(actualRuleId);
+                mockRequest.id = actualRuleId;
 
-                        int retVal = BREClient.add(rule.getQuery(), rule.getId(), currentJob.getRelatives());   // Return value kullanilmali. Return valuesu query formattan oturu hata verebilir.
-                        if (retVal == -1) {
-
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    mockRuleReq.add(temp);
-                }
-
+                mockRuleReq.add(mockRequest);
+            }
+            else {
+                RuleRequest temp = ruleRequests.get(currentJob.getRuleId() - 1);
+                temp.yesEdge = JobIdList.get(temp.yesEdge);
+                temp.noEdge = JobIdList.get(temp.noEdge);
+                temp.relativeResults = "X";
+                actualRuleId = addRuleSub(temp);
+                RuleIdList.add(actualRuleId);
                 try {
-                    dbHandler.updateJob(currentJob.getId(), "RuleId", actualRuleId);
+                    Rule rule = dbHandler.getRule(actualRuleId);
+                    System.out.println("--------------> " + rule.getQuery() + " " + rule.getId() + " " + currentJob.getRelatives());
+
+                    int retVal = BREClient.add(rule.getQuery(), rule.getId(), currentJob.getRelatives());   // Return value kullanilmali. Return valuesu query formattan oturu hata verebilir.
+                    if (retVal == -1) {
+
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                mockRuleReq.add(temp);
             }
+
+            try {
+                dbHandler.updateJob(currentJob.getId(), "RuleId", actualRuleId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
 
         // Set the start job's id.

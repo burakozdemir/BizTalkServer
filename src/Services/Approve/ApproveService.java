@@ -36,10 +36,21 @@ public class ApproveService {
     }
     //job tablosundan ruleid ye ulasip oradan rule tablosuna erisiyoruz.
     int ruleId = job.getRuleId();
+
+
+
+
+
     String newRelative="X";
     if(ruleId!=0) {
+
+      System.out.println("TARIK ----->>>> " + ruleId);
+      System.out.println("TARIK ----->>>> " + relativeId);
+      System.out.println("TARIK ----->>>> " + userApp);
+
       newRelative = BREClient.approve(ruleId, relativeId, userApp);
-      System.out.println(ruleId + " " + newRelative);
+      System.out.println("====================== " + newRelative);
+
     }else newRelative = "T";
 
     //En son olarak rule tablosunu guncelledim.
@@ -51,9 +62,8 @@ public class ApproveService {
     } catch (Exception e) {
       e.printStackTrace();
       LogClient.LogDesc("The rule couldn't be updated for some reason.", oldRule.getOwnerID(), LogLevel.ERROR);
-      // rule guncellenemezse gelecek olan String parametreli method
     }
-    System.out.println(ra.getRelativeId() + ra.getUserApprove());
+    System.out.println("++++++++> " + ra.getRelativeId() + ra.getUserApprove());
     return "update relative";
   }
 
